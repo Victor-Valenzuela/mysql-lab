@@ -1,0 +1,770 @@
+{
+  "categories": [
+    {
+      "id": "ddl",
+      "title": "1. DDL & Estructura",
+      "description": "Los cimientos: crear y modificar tablas",
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Crear una tabla básica",
+          "theory": "**CREATE TABLE** define una nueva tabla en la base de datos. Cada columna necesita un nombre, un tipo de dato, y opcionalmente restricciones:\n`CREATE TABLE nombre (\n    columna1 TIPO RESTRICCION,\n    columna2 TIPO\n);`\nTipos comunes: **INT** (número entero), **VARCHAR(n)** (texto de hasta n caracteres), **DECIMAL(p,d)** (números decimales), **DATE** (fecha).\nRestricciones: **PRIMARY KEY** (identificador único), **AUTO_INCREMENT** (se genera solo), **NOT NULL** (obligatorio).",
+          "description": "El laboratorio del hospital necesita registrar los resultados de análisis clínicos. Diseña una tabla llamada 'lab_results' con: un identificador autoincremental, el nombre del examen ('test_name', obligatorio, hasta 100 caracteres), el valor numérico del resultado ('result_value', con dos decimales), y la fecha en que se realizó ('test_date', obligatoria).",
+          "hint": "Usa CREATE TABLE con las columnas indicadas\nEl id debe ser INT con PRIMARY KEY y AUTO_INCREMENT\ntest_name es VARCHAR(100) NOT NULL\nresult_value es DECIMAL(10,2)\ntest_date es DATE NOT NULL",
+          "expected": "CREATE TABLE lab_results (id INT PRIMARY KEY AUTO_INCREMENT, test_name VARCHAR(100) NOT NULL, result_value DECIMAL(10,2), test_date DATE NOT NULL)"
+        },
+        {
+          "id": 2,
+          "title": "Constraints: NOT NULL y UNIQUE",
+          "theory": "Las restricciones controlan qué valores puede tener una columna:\n**NOT NULL** — el campo no puede quedar vacío (es obligatorio).\n**UNIQUE** — no puede haber dos filas con el mismo valor (sin duplicados).\nSe agregan después del tipo de dato:\n`name VARCHAR(100) NOT NULL UNIQUE`",
+          "description": "El hospital trabaja con varias aseguradoras y necesita un registro donde cada compañía tenga un nombre único. Crea la tabla 'insurance_companies' con: un identificador autoincremental, el nombre de la empresa ('name', obligatorio y sin duplicados, hasta 100 caracteres), teléfono ('phone', opcional, hasta 20 caracteres), y correo electrónico ('email', obligatorio, hasta 100 caracteres).",
+          "hint": "Usa CREATE TABLE insurance_companies\nEl name debe ser NOT NULL y UNIQUE\nphone es VARCHAR(20) sin restricciones adicionales\nemail es VARCHAR(100) NOT NULL\nRecuerda el PRIMARY KEY AUTO_INCREMENT en id",
+          "expected": "CREATE TABLE insurance_companies (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(100) NOT NULL UNIQUE, phone VARCHAR(20), email VARCHAR(100) NOT NULL)"
+        },
+        {
+          "id": 3,
+          "title": "Foreign Key",
+          "theory": "Una **clave foránea** (FOREIGN KEY) conecta una columna con el identificador de otra tabla. Esto garantiza que no puedas referenciar un registro que no existe:\n`CREATE TABLE hija (\n    padre_id INT NOT NULL,\n    FOREIGN KEY (padre_id) REFERENCES tabla_padre(id)\n);`\nImportante: la tabla a la que haces referencia (padre) debe existir antes de crear la FK.",
+          "description": "Para gestionar las alergias de los pacientes, necesitamos una tabla que vincule cada alergia con el paciente correspondiente. Crea la tabla 'allergies' con: un un identificador autoincremental, una referencia obligatoria al paciente ('patient_id'), el nombre del alérgeno ('allergen', obligatorio, hasta 100 caracteres) y la severidad ('severity', obligatorio, hasta 20 caracteres).",
+          "hint": "Usa FOREIGN KEY para referenciar patients(id)\npatient_id debe ser INT NOT NULL\nallergen es VARCHAR(100) NOT NULL\nseverity es VARCHAR(20) NOT NULL",
+          "expected": "CREATE TABLE allergies (id INT PRIMARY KEY AUTO_INCREMENT, patient_id INT NOT NULL, allergen VARCHAR(100) NOT NULL, severity VARCHAR(20) NOT NULL, FOREIGN KEY (patient_id) REFERENCES patients(id))"
+        },
+        {
+          "id": 4,
+          "title": "FK con ON DELETE CASCADE",
+          "theory": "**ON DELETE CASCADE** define qué pasa con los registros hijos cuando se elimina el padre:\n`FOREIGN KEY (col) REFERENCES padre(id) ON DELETE CASCADE`\nCon CASCADE, al borrar al padre se eliminan automáticamente todos sus hijos. Otras opciones:\n- **SET NULL**: los hijos quedan con valor vacío en esa columna.\n- **RESTRICT**: impide borrar al padre si tiene hijos.",
+          "description": "Las notas clínicas de un paciente deben eliminarse automáticamente si el paciente es dado de baja del sistema. Crea la tabla 'patient_notes' con: un identificador autoincremental, referencia al paciente ('patient_id', con borrado en cascada), el texto de la nota ('note', obligatorio, hasta 500 caracteres) y la fecha de creación ('created_at', obligatoria).",
+          "hint": "Agrega ON DELETE CASCADE a la FOREIGN KEY\npatient_id es INT NOT NULL\nnote es VARCHAR(500) NOT NULL\ncreated_at es DATE NOT NULL",
+          "expected": "CREATE TABLE patient_notes (id INT PRIMARY KEY AUTO_INCREMENT, patient_id INT NOT NULL, note VARCHAR(500) NOT NULL, created_at DATE NOT NULL, FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE)"
+        },
+        {
+          "id": 5,
+          "title": "DEFAULT values",
+          "theory": "**DEFAULT** permite asignar un valor automático a una columna cuando no se especifica uno al insertar datos:\n`created_at DATETIME DEFAULT NOW()`\n`status VARCHAR(20) DEFAULT 'active'`\nÚtil para fechas de creación, estados iniciales, o valores que casi siempre son iguales.",
+          "description": "El equipo de TI necesita una tabla de auditoría que registre automáticamente cuándo y quién realizó cada acción. Crea 'audit_log' con: un identificador autoincremental, la acción realizada ('action', obligatoria, hasta 100 caracteres), la fecha/hora ('created_at', con valor por defecto NOW()), y el nombre de usuario ('user_name', hasta 50 caracteres, con valor por defecto 'system').",
+          "hint": "Usa DEFAULT para asignar valores automáticos\ncreated_at es DATETIME DEFAULT NOW()\nuser_name es VARCHAR(50) DEFAULT 'system'\naction es VARCHAR(100) NOT NULL",
+          "expected": "CREATE TABLE audit_log (id INT PRIMARY KEY AUTO_INCREMENT, action VARCHAR(100) NOT NULL, created_at DATETIME DEFAULT NOW(), user_name VARCHAR(50) DEFAULT 'system')"
+        },
+        {
+          "id": 6,
+          "title": "ALTER TABLE: Agregar columna",
+          "theory": "**ALTER TABLE** permite modificar una tabla que ya existe sin borrarla ni perder datos. Para agregar una nueva columna:\n`ALTER TABLE nombre ADD COLUMN nueva_columna TIPO;`\nLa nueva columna aparece vacía (NULL) en todos los registros que ya existían.",
+          "description": "El departamento de hematología solicita que se registre el tipo de sangre de cada paciente. Modifica la tabla 'patients' para incluir este nuevo dato ('blood_type') como texto corto (hasta 5 caracteres) y opcional.",
+          "hint": "Usa ALTER TABLE patients ADD COLUMN\nEl tipo de sangre puede ser VARCHAR(5)\nNo se requiere NOT NULL porque es un dato que se irá completando",
+          "expected": "ALTER TABLE patients ADD COLUMN blood_type VARCHAR(5)"
+        },
+        {
+          "id": 7,
+          "title": "DROP TABLE",
+          "theory": "**DROP TABLE** elimina una tabla completa de la base de datos — tanto su estructura como todos sus datos. No se puede deshacer:\n`DROP TABLE nombre_tabla;`\nEn un entorno real, siempre haz una copia de seguridad antes de ejecutar este comando.",
+          "description": "La tabla 'lab_results' que creaste anteriormente ya no se necesita. Elimínala completamente del sistema.",
+          "hint": "DROP TABLE elimina la tabla y todos sus datos permanentemente.\nSintaxis: DROP TABLE nombre_tabla",
+          "expected": "DROP TABLE lab_results"
+        },
+        {
+          "id": 8,
+          "title": "DROP COLUMN",
+          "theory": "Para eliminar una columna que ya no necesitas de una tabla existente:\n`ALTER TABLE nombre DROP COLUMN nombre_columna;`\nTodos los datos almacenados en esa columna se pierden de forma permanente.",
+          "description": "El campo 'blood_type' que agregamos a 'patients' resultó innecesario. Elimina esa columna de la tabla.",
+          "hint": "Usa ALTER TABLE con DROP COLUMN.\nSintaxis: ALTER TABLE tabla DROP COLUMN nombre_columna",
+          "expected": "ALTER TABLE patients DROP COLUMN blood_type"
+        },
+        {
+          "id": 9,
+          "title": "RENAME TABLE",
+          "theory": "Para cambiar el nombre de una tabla sin afectar su contenido:\n`RENAME TABLE nombre_actual TO nombre_nuevo;`\nLos datos se mantienen intactos. Ten en cuenta que cualquier consulta o referencia que use el nombre antiguo dejará de funcionar.",
+          "description": "Por convención de nombres, la tabla 'insurance_companies' debe llamarse 'insurers'. Renómbrala.",
+          "hint": "Usa RENAME TABLE para cambiar el nombre.\nSintaxis: RENAME TABLE nombre_actual TO nombre_nuevo",
+          "expected": "RENAME TABLE insurance_companies TO insurers"
+        },
+        {
+          "id": 10,
+          "title": "Ejercicio integrador DDL",
+          "theory": "Ahora combina todo lo aprendido en un solo ejercicio: tipos de datos, restricciones, claves foráneas, acciones referenciales y valores por defecto.",
+          "description": "El hospital necesita digitalizar su historial médico en una tabla llamada 'medical_records'. Cada registro debe estar vinculado a un paciente ('patient_id', y eliminarse si el paciente se da de baja), contener el diagnóstico ('diagnosis', obligatorio, hasta 200 caracteres), un tratamiento ('treatment', opcional, hasta 500 caracteres), la fecha del registro ('record_date', obligatoria, que se complete sola si no se indica), y un estado ('status', obligatorio, hasta 20 caracteres, por defecto 'active').",
+          "hint": "Combina todo: PRIMARY KEY, AUTO_INCREMENT, NOT NULL, FOREIGN KEY con ON DELETE CASCADE, y DEFAULT.\nLa estructura es un solo CREATE TABLE con todas las restricciones.",
+          "expected": "CREATE TABLE medical_records (id INT PRIMARY KEY AUTO_INCREMENT, patient_id INT NOT NULL, diagnosis VARCHAR(200) NOT NULL, treatment VARCHAR(500), record_date DATE NOT NULL DEFAULT CURRENT_DATE, status VARCHAR(20) NOT NULL DEFAULT 'active', FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE)"
+        }
+      ]
+    },
+    {
+      "id": "dml-basic",
+      "title": "2. DML Básico",
+      "description": "Poblar la base: INSERT, UPDATE, DELETE",
+      "exercises": [
+        {
+          "id": 11,
+          "title": "INSERT básico",
+          "theory": "**INSERT INTO** agrega nuevos registros a una tabla. Debes especificar las columnas y los valores correspondientes:\n`INSERT INTO tabla (col1, col2) VALUES ('valor1', 'valor2');`\nLos textos y fechas van entre comillas simples. Los números van sin comillas.",
+          "description": "Un nuevo paciente llega al hospital para registrarse. Se llama Max Mustermann, nació el 15 de marzo de 1985, es masculino y su teléfono es 030-1234567. Inserta sus datos en el sistema (tabla patients).",
+          "hint": "Usa INSERT INTO patients (columnas) VALUES (valores)\nLas columnas necesarias son: first_name, last_name, birth_date, gender, phone\nEl formato de fecha es 'YYYY-MM-DD'\nEl género masculino se representa como 'M'",
+          "expected": "INSERT INTO patients (first_name, last_name, birth_date, gender, phone) VALUES ('Max', 'Mustermann', '1985-03-15', 'M', '030-1234567')"
+        },
+        {
+          "id": 12,
+          "title": "INSERT múltiple",
+          "theory": "Puedes insertar múltiples filas en una sola operación separando los grupos de valores con comas:\n`INSERT INTO tabla (col1, col2) VALUES\n    ('fila1_val1', 'fila1_val2'),\n    ('fila2_val1', 'fila2_val2');`",
+          "description": "La farmacia del hospital recibió dos nuevos medicamentos que deben registrarse en la tabla 'medications'. Los datos son: 'Aspirin 500mg' (categoría 'Schmerzmittel', fabricante 'Bayer', precio 3.50) y 'Vitamin D 1000IE' (categoría 'Nahrungsergänzung', fabricante 'Ratiopharm', precio 8.99). Las columnas son: 'name', 'category', 'manufacturer', 'price'.",
+          "hint": "Usa INSERT INTO medications con múltiples filas\nSepara cada fila de VALUES con una coma\nColumnas: name, category, manufacturer, price\nLos precios van sin símbolo de moneda",
+          "expected": "INSERT INTO medications (name, category, manufacturer, price) VALUES ('Aspirin 500mg', 'Schmerzmittel', 'Bayer', 3.50), ('Vitamin D 1000IE', 'Nahrungsergänzung', 'Ratiopharm', 8.99)"
+        },
+        {
+          "id": 13,
+          "title": "UPDATE con WHERE",
+          "theory": "**UPDATE** modifica datos existentes. Siempre usa **WHERE** para indicar qué filas cambiar:\n`UPDATE tabla SET columna = 'nuevo_valor' WHERE condicion;`\n⚠️ Sin WHERE, se modifican TODAS las filas de la tabla.",
+          "description": "El paciente con id 1 se mudó a una nueva dirección: 'Berliner Str. 42, Berlin'. Actualiza su columna 'address' en la tabla 'patients' sin afectar a otros registros.",
+          "hint": "Usa UPDATE patients SET ... WHERE ...\nLa columna a modificar es address\nFiltra por id = 1\nSiempre usa WHERE para no modificar todos los registros",
+          "expected": "UPDATE patients SET address = 'Berliner Str. 42, Berlin' WHERE id = 1"
+        },
+        {
+          "id": 14,
+          "title": "UPDATE múltiples columnas",
+          "theory": "Puedes actualizar varias columnas a la vez separándolas con comas en el **SET**:\n`UPDATE tabla SET col1 = 'val1', col2 = 'val2' WHERE condicion;`",
+          "description": "El paciente con id 2 cambió su número de teléfono a '040-9876543' y su correo electrónico a 'nuevo@mail.de'. Actualiza ambas columnas ('phone' y 'email') en la tabla 'patients' en una sola operación.",
+          "hint": "Usa UPDATE patients SET col1 = val1, col2 = val2\nModifica phone y email simultáneamente\nFiltra por id = 2\nSepara las asignaciones con coma",
+          "expected": "UPDATE patients SET phone = '040-9876543', email = 'nuevo@mail.de' WHERE id = 2"
+        },
+        {
+          "id": 15,
+          "title": "DELETE con WHERE",
+          "theory": "**DELETE FROM** elimina filas completas de una tabla. Siempre usa **WHERE**:\n`DELETE FROM tabla WHERE condicion;`\n⚠️ Sin WHERE, se borran TODOS los registros de la tabla.",
+          "description": "La cita con id 5 en la tabla 'appointments' fue registrada por error y debe eliminarse del sistema. Borra únicamente ese registro.",
+          "hint": "Usa DELETE FROM appointments WHERE ...\nFiltra por id = 5\nNunca uses DELETE sin WHERE a menos que quieras borrar todo\nVerifica el id antes de ejecutar",
+          "expected": "DELETE FROM appointments WHERE id = 5"
+        },
+        {
+          "id": 16,
+          "title": "INSERT con SELECT",
+          "theory": "**INSERT INTO ... SELECT** permite copiar datos de una consulta directamente a otra tabla:\n`INSERT INTO tabla_destino SELECT * FROM tabla_origen WHERE condicion;`\nNo se usa VALUES — los datos vienen del SELECT.",
+          "description": "Crea un respaldo: inserta en la tabla 'patients_backup' (que ya existe con la misma estructura que 'patients') todos los pacientes cuya fecha de nacimiento ('birth_date') sea anterior a '1980-01-01'.",
+          "hint": "INSERT INTO ... SELECT permite copiar datos de una consulta.\nSintaxis: INSERT INTO tabla_destino SELECT * FROM tabla_origen WHERE condición",
+          "expected": "INSERT INTO patients_backup SELECT * FROM patients WHERE birth_date < '1980-01-01'"
+        },
+        {
+          "id": 17,
+          "title": "UPDATE con subconsulta",
+          "theory": "Puedes usar una **subconsulta** dentro del WHERE de un UPDATE para filtrar dinámicamente:\n`UPDATE tabla SET col = 'val' WHERE id = (SELECT id FROM otra_tabla WHERE ...);`",
+          "description": "Actualiza la columna 'status' a 'reviewed' en todas las facturas de la tabla 'invoices' que pertenezcan al departamento 'Kardiologie'. Usa una subconsulta sobre la tabla 'departments' (columna 'name') para encontrar el 'department_id' correspondiente.",
+          "hint": "Puedes usar una subconsulta en el WHERE del UPDATE.\nPrimero encuentra el ID: (SELECT id FROM departments WHERE name = 'Kardiologie')",
+          "expected": "UPDATE invoices SET status = 'reviewed' WHERE department_id = (SELECT id FROM departments WHERE name = 'Kardiologie')"
+        },
+        {
+          "id": 18,
+          "title": "DELETE con subconsulta",
+          "theory": "También puedes combinar **DELETE** con subconsultas para eliminar registros basándote en datos de otra tabla:\n`DELETE FROM tabla WHERE col IN (SELECT col FROM otra_tabla WHERE ...);`",
+          "description": "Elimina de la tabla 'prescriptions' todas las recetas cuyo 'diagnosis_id' corresponda a diagnósticos con severidad ('severity') igual a 'mild' en la tabla 'diagnoses'.",
+          "hint": "Usa una subconsulta para obtener los IDs de diagnósticos leves.\nDELETE FROM prescriptions WHERE diagnosis_id IN (SELECT id FROM diagnoses WHERE severity = 'mild')",
+          "expected": "DELETE FROM prescriptions WHERE diagnosis_id IN (SELECT id FROM diagnoses WHERE severity = 'mild')"
+        },
+        {
+          "id": 19,
+          "title": "Ejercicio integrador DML",
+          "theory": "Ahora combina lo aprendido: INSERT, UPDATE y DELETE en un contexto real.",
+          "description": "El hospital recibió una actualización masiva. Ejecuta las tres operaciones separadas por punto y coma:\n1) Inserta un nuevo médico en 'doctors': 'Anna' ('first_name'), 'Weber' ('last_name'), especialización 'Dermatologie' ('specialization'), departamento 5 ('department_id'), contratada el '2024-01-15' ('hire_date'), teléfono '030-5551234' ('phone'), email 'a.weber@hospital.de' ('email').\n2) Actualiza el 'phone' del paciente con id 3 en 'patients' a '089-1112233'.\n3) Elimina de 'appointments' todas las citas con 'status' igual a 'cancelled'.",
+          "hint": "Tres operaciones en una:\nINSERT INTO doctors (...) VALUES (...);\nUPDATE patients SET phone = '...' WHERE id = 3;\nDELETE FROM appointments WHERE status = 'cancelled';",
+          "expected": "INSERT INTO doctors (first_name, last_name, specialization, department_id, hire_date, phone, email) VALUES ('Anna', 'Weber', 'Dermatologie', 5, '2024-01-15', '030-5551234', 'a.weber@hospital.de'); UPDATE patients SET phone = '089-1112233' WHERE id = 3; DELETE FROM appointments WHERE status = 'cancelled'"
+        }
+      ]
+    },
+    {
+      "id": "select-basics",
+      "title": "3. SELECT & WHERE",
+      "description": "Consultas básicas y filtros",
+      "exercises": [
+        {
+          "id": 20,
+          "title": "Seleccionar todo",
+          "theory": "**SELECT** extrae datos de una tabla. El asterisco (*) selecciona todas las columnas:\n`SELECT * FROM tabla;`\nPara columnas específicas, lístalas separadas por comas:\n`SELECT col1, col2 FROM tabla;`",
+          "description": "La recepción del hospital necesita ver la lista completa de pacientes con toda su información. Muestra todos los datos de la tabla 'patients'.",
+          "hint": "Usa SELECT * para obtener todas las columnas\nFROM indica la tabla origen\nNo necesitas WHERE si quieres todos los registros",
+          "expected": "SELECT * FROM patients"
+        },
+        {
+          "id": 21,
+          "title": "Columnas específicas",
+          "theory": "Seleccionar solo las columnas necesarias es más eficiente y seguro que usar *:\n`SELECT first_name, last_name FROM patients;`",
+          "description": "Para las etiquetas de identificación, solo se necesitan los nombres ('first_name') y apellidos ('last_name') de la tabla 'patients'. Consulta únicamente esas dos columnas.",
+          "hint": "Especifica las columnas separadas por coma después de SELECT\nLas columnas son first_name y last_name\nNo uses * cuando solo necesitas columnas específicas",
+          "expected": "SELECT first_name, last_name FROM patients"
+        },
+        {
+          "id": 22,
+          "title": "Alias de columnas",
+          "theory": "**AS** crea un alias (nombre alternativo) para una columna en el resultado:\n`SELECT columna AS nuevo_nombre FROM tabla;`\nEl alias solo afecta cómo se muestra, no cambia la tabla real.",
+          "description": "Para un informe en alemán, muestra 'first_name' como 'Vorname' y 'last_name' como 'Nachname' de la tabla 'patients'.",
+          "hint": "Usa AS para crear alias de columnas\nfirst_name AS Vorname\nlast_name AS Nachname\nLos alias renombran las columnas en el resultado",
+          "expected": "SELECT first_name AS Vorname, last_name AS Nachname FROM patients"
+        },
+        {
+          "id": 23,
+          "title": "WHERE con igualdad",
+          "theory": "**WHERE** filtra filas que cumplan una condición. Con el operador **=** buscas coincidencias exactas:\n`SELECT * FROM tabla WHERE columna = 'valor';`",
+          "description": "El departamento de ginecología necesita la lista de todas las pacientes femeninas. Filtra la tabla 'patients' por la columna 'gender' con valor 'F'.",
+          "hint": "Usa WHERE con el operador = para filtrar\nEl campo gender almacena 'F' para femenino\nLa tabla es patients",
+          "expected": "SELECT * FROM patients WHERE gender = 'F'"
+        },
+        {
+          "id": 24,
+          "title": "WHERE con comparación",
+          "theory": "Los operadores de comparación (**>**, **<**, **>=**, **<=**) funcionan con números y fechas:\n`SELECT * FROM tabla WHERE fecha > '2020-01-01';`\nUna fecha 'mayor' significa que ocurrió después.",
+          "description": "Para un estudio sobre pacientes jóvenes, muestra 'first_name', 'last_name' y 'birth_date' de la tabla 'patients' para quienes nacieron después del '1990-01-01'.",
+          "hint": "Usa el operador > para comparar fechas\nFiltra por birth_date > '1990-01-01'\nSelecciona first_name, last_name, birth_date",
+          "expected": "SELECT first_name, last_name, birth_date FROM patients WHERE birth_date > '1990-01-01'"
+        },
+        {
+          "id": 25,
+          "title": "LIKE: Búsqueda por patrón",
+          "theory": "**LIKE** busca patrones en texto. El comodín **%** representa cualquier secuencia de caracteres:\n`WHERE nombre LIKE 'M%'` → empieza con M\n`WHERE nombre LIKE '%ez'` → termina en 'ez'\n`WHERE nombre LIKE '%ana%'` → contiene 'ana'",
+          "description": "Un médico recuerda que el apellido ('last_name') de un paciente empieza con 'M' pero no recuerda el resto. Busca todos los candidatos en la tabla 'patients'.",
+          "hint": "Usa LIKE con el comodín %\n'M%' significa que empieza con M\nFiltra por last_name\n% representa cualquier cantidad de caracteres",
+          "expected": "SELECT * FROM patients WHERE last_name LIKE 'M%'"
+        },
+        {
+          "id": 26,
+          "title": "IN: Lista de valores",
+          "theory": "**IN** compara contra una lista de valores posibles. Es más limpio que múltiples OR:\n`WHERE columna IN ('valor1', 'valor2', 'valor3');`",
+          "description": "Se necesita un listado de los doctores especializados en 'Chirurgie' o 'Neurologie'. Filtra la tabla 'doctors' por la columna 'specialization'.",
+          "hint": "Usa IN para comparar contra una lista de valores\nLos valores son 'Chirurgie' y 'Neurologie'\nFiltra por la columna specialization",
+          "expected": "SELECT * FROM doctors WHERE specialization IN ('Chirurgie', 'Neurologie')"
+        },
+        {
+          "id": 27,
+          "title": "BETWEEN: Rangos",
+          "theory": "**BETWEEN** filtra valores dentro de un rango (incluye ambos extremos):\n`WHERE columna BETWEEN valor_min AND valor_max;`\nFunciona con números, fechas y texto.",
+          "description": "El departamento financiero necesita revisar las facturas con montos entre 500 y 2000. Filtra la columna 'amount' de la tabla 'invoices'.",
+          "hint": "Usa BETWEEN para definir un rango inclusivo\nBETWEEN 500 AND 2000\nFiltra la columna amount de invoices",
+          "expected": "SELECT * FROM invoices WHERE amount BETWEEN 500 AND 2000"
+        },
+        {
+          "id": 28,
+          "title": "IS NULL",
+          "theory": "**NULL** representa la ausencia de valor. No se compara con = sino con **IS**:\n`WHERE columna IS NULL` → sin valor\n`WHERE columna IS NOT NULL` → tiene valor",
+          "description": "El equipo de comunicaciones necesita identificar a los pacientes que no tienen correo electrónico registrado. Filtra la columna 'email' de la tabla 'patients' buscando valores nulos.",
+          "hint": "Usa IS NULL para buscar valores nulos\nNo uses = NULL (no funciona en SQL)\nFiltra por la columna email de patients",
+          "expected": "SELECT * FROM patients WHERE email IS NULL"
+        },
+        {
+          "id": 29,
+          "title": "AND y OR con paréntesis",
+          "theory": "**AND** requiere que todas las condiciones se cumplan. **OR** requiere al menos una. Los paréntesis controlan la prioridad:\n`WHERE condA AND (condB OR condC)`",
+          "description": "Busca en la tabla 'patients' los pacientes masculinos ('gender' = 'M') que además cumplan al menos una de estas condiciones: nacieron después de '1990-01-01' ('birth_date') o su apellido ('last_name') es 'Müller'.",
+          "hint": "Combina AND y OR con paréntesis para agrupar condiciones\ngender = 'M' AND (condición1 OR condición2)\nLos paréntesis definen la prioridad lógica\nSin paréntesis, AND tiene mayor precedencia que OR",
+          "expected": "SELECT * FROM patients WHERE gender = 'M' AND (birth_date > '1990-01-01' OR last_name = 'Müller')"
+        },
+        {
+          "id": 30,
+          "title": "Múltiples condiciones",
+          "theory": "Puedes combinar múltiples condiciones con **AND** para filtros más precisos:\n`WHERE col1 > 'valor' AND col2 = 'valor';`",
+          "description": "Busca en la tabla 'appointments' las citas con 'appointment_date' posterior al '2024-03-01' y con 'status' igual a 'scheduled'.",
+          "hint": "Combina dos condiciones con AND\nFiltra por appointment_date > '2024-03-01'\nY por status = 'scheduled'\nAmbas condiciones deben cumplirse",
+          "expected": "SELECT * FROM appointments WHERE appointment_date > '2024-03-01' AND status = 'scheduled'"
+        },
+        {
+          "id": 31,
+          "title": "DISTINCT",
+          "theory": "**DISTINCT** elimina filas duplicadas del resultado:\n`SELECT DISTINCT columna FROM tabla;`\nÚtil para ver qué valores únicos existen en una columna.",
+          "description": "El hospital necesita saber qué especializaciones médicas tiene disponibles. Muestra los valores únicos de la columna 'specialization' en la tabla 'doctors'.",
+          "hint": "DISTINCT elimina filas duplicadas del resultado.\nSintaxis: SELECT DISTINCT columna FROM tabla",
+          "expected": "SELECT DISTINCT specialization FROM doctors"
+        },
+        {
+          "id": 32,
+          "title": "NOT IN",
+          "theory": "**NOT IN** excluye valores de una lista:\n`WHERE columna NOT IN ('val1', 'val2');`\nEs lo opuesto a IN.",
+          "description": "Muestra todos los pacientes de la tabla 'patients' cuyo 'gender' NO sea 'M' ni 'F' (para detectar datos mal ingresados).",
+          "hint": "NOT IN excluye valores de una lista.\nSintaxis: WHERE columna NOT IN ('val1', 'val2')",
+          "expected": "SELECT * FROM patients WHERE gender NOT IN ('M', 'F')"
+        },
+        {
+          "id": 33,
+          "title": "Operador !=",
+          "theory": "El operador **!=** (o **<>**) significa 'diferente de'. Filtra filas que NO coincidan con un valor:\n`WHERE columna != 'valor';`",
+          "description": "Lista todas las citas de la tabla 'appointments' cuyo 'status' sea diferente de 'completed'.",
+          "hint": "El operador != (o <>) significa 'diferente de'.\nSintaxis: WHERE columna != 'valor'\nFiltra por status en la tabla appointments",
+          "expected": "SELECT * FROM appointments WHERE status != 'completed'"
+        },
+        {
+          "id": 34,
+          "title": "Ejercicio integrador SELECT",
+          "theory": "Combina todo lo aprendido en una sola consulta: columnas específicas, alias, filtros, patrones y lógica.",
+          "description": "Genera un reporte que muestre el nombre ('first_name' como 'Nombre') y apellido ('last_name' como 'Apellido') de los pacientes que sean mujeres, cuyo apellido empiece con 'S', y que tengan email registrado (no nulo). Ordena alfabéticamente por apellido.",
+          "hint": "Combina SELECT con alias, WHERE con múltiples condiciones (AND), LIKE, IS NOT NULL y ORDER BY.",
+          "expected": "SELECT first_name AS Nombre, last_name AS Apellido FROM patients WHERE gender = 'F' AND last_name LIKE 'S%' AND email IS NOT NULL ORDER BY last_name ASC"
+        }
+      ]
+    },
+    {
+      "id": "order-limit",
+      "title": "4. ORDER BY & LIMIT",
+      "description": "Ordenar y paginar resultados",
+      "exercises": [
+        {
+          "id": 35,
+          "title": "Orden ascendente",
+          "theory": "**ORDER BY** ordena los resultados. **ASC** (ascendente, A→Z) es el valor por defecto. **DESC** invierte el orden:\n`SELECT * FROM tabla ORDER BY columna ASC;`\n`SELECT * FROM tabla ORDER BY columna DESC;`",
+          "description": "La recepción necesita un listado alfabético de todos los pacientes de la tabla 'patients' ordenados por 'last_name'.",
+          "hint": "Usa ORDER BY para ordenar resultados\nASC ordena de A a Z (ascendente)\nOrdena por last_name",
+          "expected": "SELECT * FROM patients ORDER BY last_name ASC"
+        },
+        {
+          "id": 36,
+          "title": "Orden descendente con LIMIT",
+          "theory": "**LIMIT** restringe la cantidad de filas devueltas:\n`SELECT * FROM tabla ORDER BY col DESC LIMIT 10;`\nCombinado con ORDER BY, obtienes los 'top N' resultados.",
+          "description": "El director financiero quiere ver las 10 facturas más costosas. Ordena la tabla 'invoices' por 'amount' de mayor a menor y limita a 10 resultados.",
+          "hint": "Usa ORDER BY amount DESC para mayor a menor\nLIMIT 10 restringe a los primeros 10 resultados\nLa tabla es invoices",
+          "expected": "SELECT * FROM invoices ORDER BY amount DESC LIMIT 10"
+        },
+        {
+          "id": 37,
+          "title": "Paginación",
+          "theory": "**OFFSET** salta un número de filas antes de empezar a devolver resultados. Junto con LIMIT, permite paginar:\n`SELECT * FROM tabla ORDER BY id LIMIT 10 OFFSET 20;`\nEsto devuelve la tercera página (filas 21-30).",
+          "description": "El sistema web del hospital muestra 10 pacientes por página. Obtén la segunda página (registros 11 al 20) de la tabla 'patients', ordenados por 'id'.",
+          "hint": "Usa LIMIT y OFFSET para paginar\nLIMIT 10 define el tamaño de página\nOFFSET 10 salta los primeros 10 registros\nORDER BY id asegura un orden consistente",
+          "expected": "SELECT * FROM patients ORDER BY id LIMIT 10 OFFSET 10"
+        },
+        {
+          "id": 38,
+          "title": "Los 5 más recientes",
+          "theory": "Combinar **ORDER BY DESC** con **LIMIT** es el patrón clásico para obtener los registros más recientes:\n`SELECT * FROM tabla ORDER BY fecha DESC LIMIT 5;`",
+          "description": "El panel de control debe mostrar las 5 citas más recientes. Ordena la tabla 'appointments' por 'appointment_date' de más reciente a más antigua y limita a 5.",
+          "hint": "Ordena por appointment_date en orden descendente\nLIMIT 5 para obtener solo las 5 más recientes\nDESC pone las fechas más recientes primero",
+          "expected": "SELECT * FROM appointments ORDER BY appointment_date DESC LIMIT 5"
+        },
+        {
+          "id": 39,
+          "title": "ORDER BY múltiples columnas",
+          "theory": "Puedes ordenar por varias columnas. La primera tiene prioridad, la segunda desempata:\n`SELECT * FROM tabla ORDER BY col1 ASC, col2 DESC;`",
+          "description": "Ordena la tabla 'invoices' primero por 'department_id' ascendente y luego por 'amount' descendente dentro de cada departamento.",
+          "hint": "Puedes ordenar por varias columnas separadas por comas.\nLa primera tiene prioridad.\nSintaxis: ORDER BY col1 ASC, col2 DESC",
+          "expected": "SELECT * FROM invoices ORDER BY department_id ASC, amount DESC"
+        },
+        {
+          "id": 40,
+          "title": "Ejercicio integrador ORDER BY",
+          "theory": "Combina ordenamiento por múltiples columnas, límite y offset en una sola consulta.",
+          "description": "El sistema de reportes necesita la tercera página de facturas (registros 21 al 30), ordenadas primero por departamento (ascendente) y luego por monto (descendente) dentro de cada departamento.",
+          "hint": "Combina ORDER BY con dos columnas, LIMIT y OFFSET.\nORDER BY department_id ASC, amount DESC\nLIMIT 10 OFFSET 20",
+          "expected": "SELECT * FROM invoices ORDER BY department_id ASC, amount DESC LIMIT 10 OFFSET 20"
+        }
+      ]
+    },
+    {
+      "id": "aggregation",
+      "title": "5. Agregación",
+      "description": "COUNT, SUM, AVG, GROUP BY, HAVING",
+      "exercises": [
+        {
+          "id": 41,
+          "title": "COUNT: Contar registros",
+          "theory": "**COUNT(*)** cuenta todas las filas de una tabla. Usa **AS** para nombrar el resultado:\n`SELECT COUNT(*) AS total FROM tabla;`",
+          "description": "La dirección del hospital necesita saber cuántos pacientes están registrados en la tabla 'patients'. Muestra el conteo con el alias 'total'.",
+          "hint": "Usa COUNT(*) para contar todos los registros\nAS total crea un alias para el resultado\nNo necesitas WHERE si cuentas todos",
+          "expected": "SELECT COUNT(*) AS total FROM patients"
+        },
+        {
+          "id": 42,
+          "title": "AVG: Promedio",
+          "theory": "**AVG()** calcula el promedio de una columna numérica:\n`SELECT AVG(columna) AS alias FROM tabla;`",
+          "description": "El departamento financiero quiere conocer el monto promedio de la columna 'amount' en la tabla 'invoices'. Muestra el resultado como 'avg_amount'.",
+          "hint": "Usa AVG() para calcular el promedio\nLa columna es amount de invoices\nUsa AS avg_amount para el alias",
+          "expected": "SELECT AVG(amount) AS avg_amount FROM invoices"
+        },
+        {
+          "id": 43,
+          "title": "SUM y MAX",
+          "theory": "Puedes usar varias funciones de agregación en un mismo **SELECT**:\n`SELECT SUM(col) AS total, MAX(col) AS maximo FROM tabla;`",
+          "description": "Para el informe anual, muestra la suma total de 'amount' (como 'total') y el valor máximo de 'amount' (como 'max_amount') de la tabla 'invoices'.",
+          "hint": "Usa SUM() para la suma total\nUsa MAX() para el valor máximo\nAmbas funciones van en el mismo SELECT\nLa tabla es invoices, columna amount",
+          "expected": "SELECT SUM(amount) AS total, MAX(amount) AS max_amount FROM invoices"
+        },
+        {
+          "id": 44,
+          "title": "GROUP BY",
+          "theory": "**GROUP BY** agrupa filas con el mismo valor en una columna y permite aplicar funciones de agregación a cada grupo:\n`SELECT columna, COUNT(*) FROM tabla GROUP BY columna;`",
+          "description": "Para estadísticas demográficas, agrupa la tabla 'patients' por 'gender' y cuenta cuántos hay en cada grupo (como 'count').",
+          "hint": "Usa GROUP BY para agrupar por una columna\nCOUNT(*) cuenta los registros de cada grupo\nAgrupa por gender\nAlias: count",
+          "expected": "SELECT gender, COUNT(*) AS count FROM patients GROUP BY gender"
+        },
+        {
+          "id": 45,
+          "title": "GROUP BY con SUM",
+          "theory": "Combina **GROUP BY** con **SUM()** para obtener totales por grupo:\n`SELECT grupo, SUM(valor) AS total FROM tabla GROUP BY grupo;`",
+          "description": "El controller financiero necesita ver el total de 'amount' (como 'total') agrupado por 'department_id' en la tabla 'invoices'.",
+          "hint": "Agrupa invoices por department_id\nUsa SUM(amount) para el total por grupo\nAlias: total\nGROUP BY department_id",
+          "expected": "SELECT department_id, SUM(amount) AS total FROM invoices GROUP BY department_id"
+        },
+        {
+          "id": 46,
+          "title": "HAVING: Filtrar grupos",
+          "theory": "**HAVING** filtra grupos después de la agregación (WHERE filtra antes de agrupar):\n`SELECT col, SUM(val) AS total FROM tabla GROUP BY col HAVING total > 1000;`",
+          "description": "Muestra solo los 'department_id' de la tabla 'invoices' cuya suma de 'amount' (como 'total') supere los 10000. Filtra después de agrupar.",
+          "hint": "HAVING filtra después de GROUP BY (WHERE filtra antes)\nUsa SUM(amount) AS total\nHAVING total > 10000\nAgrupa por department_id",
+          "expected": "SELECT department_id, SUM(amount) AS total FROM invoices GROUP BY department_id HAVING total > 10000"
+        },
+        {
+          "id": 47,
+          "title": "MIN",
+          "theory": "**MIN()** devuelve el valor más bajo de una columna:\n`SELECT MIN(columna) AS alias FROM tabla;`",
+          "description": "Muestra el valor mínimo de la columna 'amount' en la tabla 'invoices' como 'min_amount'.",
+          "hint": "MIN(columna) devuelve el valor más bajo.\nSintaxis: SELECT MIN(amount) AS min_amount FROM invoices",
+          "expected": "SELECT MIN(amount) AS min_amount FROM invoices"
+        },
+        {
+          "id": 48,
+          "title": "COUNT con DISTINCT",
+          "theory": "**COUNT(DISTINCT columna)** cuenta solo los valores únicos (sin repeticiones):\n`SELECT COUNT(DISTINCT col) AS alias FROM tabla;`",
+          "description": "Cuenta cuántos valores únicos de 'department_id' existen en la tabla 'invoices'. Muéstralo como 'dept_count'.",
+          "hint": "COUNT(DISTINCT columna) cuenta valores únicos.\nSintaxis: SELECT COUNT(DISTINCT department_id) AS dept_count FROM invoices",
+          "expected": "SELECT COUNT(DISTINCT department_id) AS dept_count FROM invoices"
+        },
+        {
+          "id": 49,
+          "title": "GROUP BY múltiples columnas",
+          "theory": "Puedes agrupar por múltiples columnas para obtener combinaciones únicas:\n`SELECT col1, col2, COUNT(*) FROM tabla GROUP BY col1, col2;`",
+          "description": "Muestra la cantidad de registros en la tabla 'appointments' agrupados por cada combinación de 'doctor_id' y 'status' (conteo como 'total').",
+          "hint": "Puedes agrupar por varias columnas a la vez.\nSintaxis: GROUP BY col1, col2",
+          "expected": "SELECT doctor_id, status, COUNT(*) AS total FROM appointments GROUP BY doctor_id, status"
+        },
+        {
+          "id": 50,
+          "title": "Ejercicio integrador Agregación",
+          "theory": "Combina funciones de agregación, GROUP BY, HAVING y alias en una sola consulta.",
+          "description": "Genera un reporte de la tabla 'invoices' que muestre cada 'department_id', la cantidad de facturas (como 'invoice_count'), el monto total (como 'total_amount') y el promedio (como 'avg_amount'). Solo incluye departamentos con más de 5 facturas. Ordena por 'total_amount' descendente.",
+          "hint": "Combina COUNT(*), SUM(amount), AVG(amount) con GROUP BY y HAVING.\nHAVING invoice_count > 5\nORDER BY total_amount DESC",
+          "expected": "SELECT department_id, COUNT(*) AS invoice_count, SUM(amount) AS total_amount, AVG(amount) AS avg_amount FROM invoices GROUP BY department_id HAVING invoice_count > 5 ORDER BY total_amount DESC"
+        }
+      ]
+    },
+    {
+      "id": "joins",
+      "title": "6. JOINs",
+      "description": "Relacionar múltiples tablas",
+      "exercises": [
+        {
+          "id": 51,
+          "title": "INNER JOIN básico",
+          "theory": "**INNER JOIN** combina filas de dos tablas donde hay coincidencia en la condición **ON**:\n`SELECT * FROM tabla1 t1\n INNER JOIN tabla2 t2 \n ON t1.id = t2.fk_id;`",
+          "description": "La recepción necesita un listado con 'first_name' y 'last_name' de la tabla 'patients' junto con 'appointment_date' de la tabla 'appointments'. Relaciona ambas tablas por 'patient_id'.",
+          "hint": "Usa INNER JOIN para combinar patients y appointments\nLa relación es patients.id = appointments.patient_id\nUsa alias: p para patients, a para appointments\nSelecciona p.first_name, p.last_name, a.appointment_date",
+          "expected": "SELECT p.first_name, p.last_name, a.appointment_date FROM patients p INNER JOIN appointments a ON p.id = a.patient_id"
+        },
+        {
+          "id": 52,
+          "title": "JOIN con nombres de departamento",
+          "theory": "Usa **alias** para abreviar nombres de tabla y evitar ambigüedad en columnas con el mismo nombre:\n`SELECT d.name, dep.name\n FROM doctors d\n INNER JOIN departments dep \n ON d.department_id = dep.id;`",
+          "description": "Para el organigrama, muestra 'first_name' y 'last_name' de la tabla 'doctors' junto con el nombre del departamento ('name' de 'departments' como 'department'). Relaciona por 'department_id'.",
+          "hint": "Relaciona doctors con departments\nLa FK es doctors.department_id = departments.id\nUsa alias: d para doctors, dep para departments\nMuestra d.first_name, d.last_name, dep.name AS department",
+          "expected": "SELECT d.first_name, d.last_name, dep.name AS department FROM doctors d INNER JOIN departments dep ON d.department_id = dep.id"
+        },
+        {
+          "id": 53,
+          "title": "LEFT JOIN: Incluir sin coincidencia",
+          "theory": "**LEFT JOIN** incluye TODOS los registros de la tabla izquierda, aunque no tengan coincidencia en la derecha (aparecen como NULL):\n`SELECT * FROM tabla1 t1\n LEFT JOIN tabla2 t2 \n ON t1.id = t2.fk_id;`",
+          "description": "Muestra 'first_name' y 'last_name' de TODOS los pacientes ('patients') junto con 'appointment_date' de 'appointments'. Los pacientes sin citas deben aparecer con fecha NULL.",
+          "hint": "LEFT JOIN incluye todos los registros de la tabla izquierda\nLos pacientes sin citas tendrán NULL en appointment_date\nRelaciona patients (izquierda) con appointments (derecha)\nON p.id = a.patient_id",
+          "expected": "SELECT p.first_name, p.last_name, a.appointment_date FROM patients p LEFT JOIN appointments a ON p.id = a.patient_id"
+        },
+        {
+          "id": 54,
+          "title": "JOIN de 3 tablas",
+          "theory": "Puedes encadenar múltiples **JOINs** para relacionar 3 o más tablas:\n`SELECT a.col1, b.col2, c.col3\n FROM tabla1 a\n JOIN tabla2 b ON a.id = b.tabla1_id\n JOIN tabla3 c \n ON b.id = c.tabla2_id;`",
+          "description": "Muestra para cada cita en 'appointments': nombre del paciente ('patient_first', 'patient_last'), nombre del doctor ('doctor_first', 'doctor_last') y 'appointment_date'. Relaciona con 'patients' y 'doctors'.",
+          "hint": "Encadena dos INNER JOIN desde appointments\nRelaciona con patients (patient_id) y doctors (doctor_id)\nUsa alias descriptivos para las columnas\nSelecciona nombres de paciente, doctor y fecha",
+          "expected": "SELECT p.first_name AS patient_first, p.last_name AS patient_last, d.first_name AS doctor_first, d.last_name AS doctor_last, a.appointment_date FROM appointments a INNER JOIN patients p ON a.patient_id = p.id INNER JOIN doctors d ON a.doctor_id = d.id"
+        },
+        {
+          "id": 55,
+          "title": "JOIN con agregación",
+          "theory": "Combinar **JOIN** con **GROUP BY** y funciones de agregación permite generar reportes cruzados:\n`SELECT dep.name, COUNT(d.id)\n FROM departments dep\n JOIN doctors d \n ON dep.id = d.department_id\n GROUP BY dep.name;`",
+          "description": "Muestra el nombre de cada departamento ('name' de 'departments') y cuántos doctores tiene (como 'doctor_count'). Ordena de mayor a menor.",
+          "hint": "Combina JOIN con GROUP BY y COUNT\nRelaciona departments con doctors\nAgrupa por dep.name\nOrdena por doctor_count DESC",
+          "expected": "SELECT dep.name, COUNT(d.id) AS doctor_count FROM departments dep INNER JOIN doctors d ON dep.id = d.department_id GROUP BY dep.name ORDER BY doctor_count DESC"
+        },
+        {
+          "id": 56,
+          "title": "Self JOIN",
+          "theory": "Un **Self JOIN** une una tabla consigo misma usando alias diferentes. Útil para encontrar relaciones dentro de la misma tabla:\n`SELECT t1.col, t2.col\n FROM tabla t1\n JOIN tabla t2 \n ON t1.col = t2.col\n AND t1.id < t2.id;`",
+          "description": "Encuentra pares de pacientes en 'patients' que comparten el mismo 'last_name'. Muestra 'first_name' y 'last_name' de ambos (como 'patient1_first', 'patient1_last', 'patient2_first', 'patient2_last').",
+          "hint": "Un Self JOIN une una tabla consigo misma usando alias diferentes.\nFROM patients p1 INNER JOIN patients p2 ON p1.last_name = p2.last_name\nUsa p1.id < p2.id para evitar duplicados",
+          "expected": "SELECT p1.first_name AS patient1_first, p1.last_name AS patient1_last, p2.first_name AS patient2_first, p2.last_name AS patient2_last FROM patients p1 INNER JOIN patients p2 ON p1.last_name = p2.last_name AND p1.id < p2.id"
+        },
+        {
+          "id": 57,
+          "title": "Ejercicio integrador JOINs",
+          "theory": "Combina múltiples JOINs, agregación y ordenamiento en una consulta compleja.",
+          "description": "Genera un reporte que muestre el nombre de cada departamento ('name' de 'departments'), la cantidad de citas de sus doctores (como 'total_appointments') y el nombre del doctor con más citas en ese departamento (como 'top_doctor'). Usa JOINs entre 'departments', 'doctors' y 'appointments'. Agrupa por departamento y ordena por 'total_appointments' descendente.",
+          "hint": "JOIN departments con doctors y appointments.\nGROUP BY dep.name\nCOUNT para total_appointments\nORDER BY total_appointments DESC",
+          "expected": "SELECT dep.name, COUNT(a.id) AS total_appointments FROM departments dep INNER JOIN doctors d ON dep.id = d.department_id INNER JOIN appointments a ON d.id = a.doctor_id GROUP BY dep.name ORDER BY total_appointments DESC"
+        }
+      ]
+    },
+    {
+      "id": "subqueries",
+      "title": "7. Subconsultas & CTEs",
+      "description": "Consultas dentro de consultas y WITH",
+      "exercises": [
+        {
+          "id": 58,
+          "title": "Subquery en WHERE",
+          "theory": "Una **subconsulta** es un SELECT dentro de otro. En el WHERE, permite filtrar basándose en cálculos dinámicos:\n`WHERE col > (SELECT AVG(col) FROM tabla);`",
+          "description": "Muestra todas las facturas de la tabla 'invoices' cuyo 'amount' sea mayor al promedio de 'amount' de la misma tabla.",
+          "hint": "La subconsulta calcula AVG(amount) FROM invoices\nEl WHERE compara amount > (subconsulta)\nLa subconsulta va entre paréntesis\nSELECT * FROM invoices WHERE amount > (...)",
+          "expected": "SELECT * FROM invoices WHERE amount > (SELECT AVG(amount) FROM invoices)"
+        },
+        {
+          "id": 59,
+          "title": "EXISTS",
+          "theory": "**EXISTS** devuelve true si la subconsulta retorna al menos una fila. Es eficiente para verificar existencia:\n`WHERE EXISTS (SELECT 1 FROM tabla WHERE condicion);`",
+          "description": "Muestra todos los pacientes de 'patients' que tienen al menos una cita en 'appointments'. Usa EXISTS con la relación 'patient_id'.",
+          "hint": "EXISTS verifica si la subconsulta devuelve algún resultado\nRelaciona la subconsulta con la consulta externa: a.patient_id = p.id\nSELECT 1 es suficiente dentro de EXISTS\nUsa alias p para patients y a para appointments",
+          "expected": "SELECT * FROM patients p WHERE EXISTS (SELECT 1 FROM appointments a WHERE a.patient_id = p.id)"
+        },
+        {
+          "id": 60,
+          "title": "Subquery con MAX",
+          "theory": "Puedes usar subconsultas para encontrar el registro con el valor máximo o mínimo:\n`WHERE id = (SELECT id FROM tabla ORDER BY col DESC LIMIT 1);`",
+          "description": "Muestra 'first_name' y 'last_name' del doctor en 'doctors' que tiene más citas en 'appointments'. Usa una subconsulta que agrupe por 'doctor_id'.",
+          "hint": "Agrupa appointments por doctor_id y cuenta\nOrdena por COUNT(*) DESC con LIMIT 1 para el máximo\nUsa esa subconsulta para buscar el doctor por id\nSELECT first_name, last_name FROM doctors WHERE id = (...)",
+          "expected": "SELECT first_name, last_name FROM doctors WHERE id = (SELECT doctor_id FROM appointments GROUP BY doctor_id ORDER BY COUNT(*) DESC LIMIT 1)"
+        },
+        {
+          "id": 61,
+          "title": "CTE (WITH)",
+          "theory": "**WITH** (CTE) crea una tabla temporal con nombre que puedes reutilizar en la consulta principal:\n`WITH nombre AS (SELECT ...) SELECT * FROM nombre WHERE ...;`",
+          "description": "Crea un CTE llamado 'dept_revenue' que calcule la suma de 'amount' (como 'total') por 'department_id' de 'invoices'. Luego filtra los que superen 15000.",
+          "hint": "WITH nombre AS (consulta) define un CTE\nEl CTE calcula SUM(amount) agrupado por department_id\nLuego SELECT * FROM el_cte WHERE total > 15000\nNombra el CTE como dept_revenue",
+          "expected": "WITH dept_revenue AS (SELECT department_id, SUM(amount) AS total FROM invoices GROUP BY department_id) SELECT * FROM dept_revenue WHERE total > 15000"
+        },
+        {
+          "id": 62,
+          "title": "Subconsulta en FROM",
+          "theory": "Una **subconsulta en FROM** (tabla derivada) permite usar el resultado de un SELECT como si fuera una tabla:\n`SELECT AVG(cnt) FROM (SELECT COUNT(*) AS cnt FROM tabla GROUP BY col) AS sub;`",
+          "description": "Calcula el promedio de citas por médico (como 'avg_appointments'). Primero cuenta las citas por 'doctor_id' en 'appointments' (como 'appointment_count'), luego calcula el promedio de esos conteos.",
+          "hint": "Puedes usar un SELECT como tabla en el FROM.\nSintaxis: SELECT AVG(cnt) FROM (SELECT COUNT(*) AS cnt FROM ... GROUP BY ...) AS sub",
+          "expected": "SELECT AVG(appointment_count) AS avg_appointments FROM (SELECT doctor_id, COUNT(*) AS appointment_count FROM appointments GROUP BY doctor_id) AS doctor_counts"
+        },
+        {
+          "id": 63,
+          "title": "NOT EXISTS",
+          "theory": "**NOT EXISTS** es lo opuesto a EXISTS — devuelve true cuando la subconsulta NO encuentra filas:\n`WHERE NOT EXISTS (SELECT 1 FROM tabla WHERE condicion);`",
+          "description": "Muestra todos los pacientes de 'patients' que NUNCA han tenido una cita en 'appointments'. Usa NOT EXISTS.",
+          "hint": "NOT EXISTS es true cuando la subconsulta NO devuelve filas.\nEs lo opuesto a EXISTS.\nSintaxis: WHERE NOT EXISTS (SELECT 1 FROM ... WHERE ...)",
+          "expected": "SELECT * FROM patients p WHERE NOT EXISTS (SELECT 1 FROM appointments a WHERE a.patient_id = p.id)"
+        },
+        {
+          "id": 64,
+          "title": "Ejercicio integrador Subconsultas",
+          "theory": "Combina subconsultas, CTEs y EXISTS en una consulta compleja.",
+          "description": "Usando un CTE llamado 'active_doctors' que contenga los 'doctor_id' que tienen más de 10 citas en 'appointments', muestra 'first_name' y 'last_name' de esos doctores desde la tabla 'doctors'.",
+          "hint": "WITH active_doctors AS (SELECT doctor_id FROM appointments GROUP BY doctor_id HAVING COUNT(*) > 10)\nSELECT first_name, last_name FROM doctors WHERE id IN (SELECT doctor_id FROM active_doctors)",
+          "expected": "WITH active_doctors AS (SELECT doctor_id FROM appointments GROUP BY doctor_id HAVING COUNT(*) > 10) SELECT first_name, last_name FROM doctors WHERE id IN (SELECT doctor_id FROM active_doctors)"
+        }
+      ]
+    },
+    {
+      "id": "dates",
+      "title": "8. Funciones de Fecha",
+      "description": "Trabajar con fechas en MySQL",
+      "exercises": [
+        {
+          "id": 65,
+          "title": "Filtrar por año",
+          "theory": "**BETWEEN** con fechas filtra un rango temporal completo (incluye ambos extremos):\n`WHERE fecha BETWEEN '2024-01-01' AND '2024-12-31';`",
+          "description": "Muestra todas las citas de la tabla 'appointments' cuya 'appointment_date' esté entre '2024-01-01' y '2024-12-31'.",
+          "hint": "Usa BETWEEN con fechas para definir el rango\nDesde '2024-01-01' hasta '2024-12-31'\nFiltra por appointment_date\nBETWEEN es inclusivo en ambos extremos",
+          "expected": "SELECT * FROM appointments WHERE appointment_date BETWEEN '2024-01-01' AND '2024-12-31'"
+        },
+        {
+          "id": 66,
+          "title": "Extraer año de nacimiento",
+          "theory": "**YEAR()** extrae el año de una columna de fecha:\n`SELECT YEAR(fecha) AS year FROM tabla;`\nTambién existen **MONTH()** y **DAY()**.",
+          "description": "Muestra 'first_name', 'last_name' y el año de 'birth_date' (como 'birth_year') de la tabla 'patients'.",
+          "hint": "Usa la función YEAR() para extraer el año de una fecha\nYEAR(birth_date) extrae solo el año\nAlias: birth_year\nSelecciona también first_name y last_name",
+          "expected": "SELECT first_name, last_name, YEAR(birth_date) AS birth_year FROM patients"
+        },
+        {
+          "id": 67,
+          "title": "Citas de los últimos 30 días",
+          "theory": "**DATE_SUB()** resta un intervalo a una fecha. Combinado con **NOW()**, calcula fechas relativas:\n`WHERE fecha >= DATE_SUB(NOW(), INTERVAL 30 DAY);`",
+          "description": "Muestra todas las citas de 'appointments' cuya 'appointment_date' sea de los últimos 30 días respecto a la fecha actual.",
+          "hint": "DATE_SUB resta un intervalo a una fecha\nDATE_SUB(NOW(), INTERVAL 30 DAY) da la fecha de hace 30 días\nFiltra appointment_date >= esa fecha\nNOW() devuelve la fecha/hora actual",
+          "expected": "SELECT * FROM appointments WHERE appointment_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)"
+        },
+        {
+          "id": 68,
+          "title": "DATEDIFF",
+          "theory": "**DATEDIFF()** calcula la diferencia en días entre dos fechas:\n`SELECT DATEDIFF(fecha_fin, fecha_inicio) AS dias FROM tabla;`",
+          "description": "De la tabla 'admissions', muestra 'patient_id', 'admission_date', 'discharge_date' y la diferencia en días (como 'days_stayed'). Solo incluye registros donde 'discharge_date' no sea nulo.",
+          "hint": "DATEDIFF calcula la diferencia en días entre dos fechas.\nSintaxis: DATEDIFF(fecha_mayor, fecha_menor)\nFiltra con WHERE discharge_date IS NOT NULL",
+          "expected": "SELECT patient_id, admission_date, discharge_date, DATEDIFF(discharge_date, admission_date) AS days_stayed FROM admissions WHERE discharge_date IS NOT NULL"
+        },
+        {
+          "id": 69,
+          "title": "Agrupar por mes",
+          "theory": "**MONTH()** extrae el mes de una fecha. Combinado con **GROUP BY**, permite agrupar por período:\n`SELECT MONTH(fecha) AS mes, COUNT(*) FROM tabla GROUP BY MONTH(fecha);`",
+          "description": "Muestra el mes (como 'month') y la cantidad de citas (como 'total') de la tabla 'appointments' para el año 2024, agrupados por mes.",
+          "hint": "Usa MONTH(fecha) para extraer el mes.\nFiltra por año 2024 y agrupa por mes.\nSintaxis: SELECT MONTH(appointment_date) AS month, COUNT(*) AS total",
+          "expected": "SELECT MONTH(appointment_date) AS month, COUNT(*) AS total FROM appointments WHERE appointment_date BETWEEN '2024-01-01' AND '2024-12-31' GROUP BY MONTH(appointment_date)"
+        },
+        {
+          "id": 70,
+          "title": "Ejercicio integrador Fechas",
+          "theory": "Combina funciones de fecha, filtros temporales y agregación.",
+          "description": "Genera un reporte de la tabla 'appointments' que muestre el año (como 'year') y mes (como 'month') de 'appointment_date', junto con la cantidad de citas (como 'total'). Solo incluye meses con más de 50 citas. Ordena por año y mes ascendente.",
+          "hint": "Usa YEAR() y MONTH() para extraer componentes.\nGROUP BY ambos.\nHAVING total > 50\nORDER BY year ASC, month ASC",
+          "expected": "SELECT YEAR(appointment_date) AS year, MONTH(appointment_date) AS month, COUNT(*) AS total FROM appointments GROUP BY YEAR(appointment_date), MONTH(appointment_date) HAVING total > 50 ORDER BY year ASC, month ASC"
+        }
+      ]
+    },
+    {
+      "id": "optimization",
+      "title": "9. Optimización & Control",
+      "description": "Índices, transacciones y vistas",
+      "exercises": [
+        {
+          "id": 71,
+          "title": "Crear un índice",
+          "theory": "**CREATE INDEX** acelera las búsquedas en una columna sin modificar los datos:\n`CREATE INDEX nombre_indice ON tabla(columna);`\nEs como el índice de un libro: encuentras información más rápido.",
+          "description": "Las búsquedas por 'last_name' en la tabla 'patients' son muy frecuentes y lentas. Crea un índice llamado 'idx_patients_lastname' sobre esa columna.",
+          "hint": "Usa CREATE INDEX nombre ON tabla(columna)\nNombra el índice: idx_patients_lastname\nLa columna es last_name de patients\nLos índices aceleran las búsquedas pero ocupan espacio",
+          "expected": "CREATE INDEX idx_patients_lastname ON patients(last_name)"
+        },
+        {
+          "id": 72,
+          "title": "Índice compuesto",
+          "theory": "Un **índice compuesto** cubre múltiples columnas. Útil cuando filtras por varias a la vez:\n`CREATE INDEX nombre ON tabla(col1, col2);`",
+          "description": "Las consultas que filtran la tabla 'appointments' por 'appointment_date' y 'status' simultáneamente son muy comunes. Crea un índice compuesto llamado 'idx_appointments_date_status' que cubra ambas columnas.",
+          "hint": "Un índice compuesto incluye múltiples columnas\nCREATE INDEX nombre ON tabla(col1, col2)\nNombre: idx_appointments_date_status\nColumnas: appointment_date y status",
+          "expected": "CREATE INDEX idx_appointments_date_status ON appointments(appointment_date, status)"
+        },
+        {
+          "id": 73,
+          "title": "Transacción: BEGIN y COMMIT",
+          "theory": "Una **transacción** agrupa operaciones como una unidad atómica. Si algo falla, nada se guarda:\n`BEGIN;\n INSERT INTO ...;\n COMMIT;`\n**COMMIT** confirma los cambios permanentemente.",
+          "description": "El sistema de facturación debe registrar un nuevo cobro de forma segura: si algo falla durante el proceso, no debe quedar a medias. Registra en la tabla 'invoices' un pago del paciente 1 ('patient_id'), departamento 3 ('department_id'), por un monto de 750.00 ('amount'), con fecha '2024-06-15' ('invoice_date') y estado 'pending' ('status'). Usa una transacción para garantizar la integridad.",
+          "hint": "BEGIN inicia la transacción\nInserta en invoices con los valores dados\nCOMMIT confirma los cambios\nSi algo falla entre BEGIN y COMMIT, se puede revertir",
+          "expected": "BEGIN; INSERT INTO invoices (patient_id, department_id, amount, invoice_date, status) VALUES (1, 3, 750.00, '2024-06-15', 'pending'); COMMIT"
+        },
+        {
+          "id": 74,
+          "title": "Transacción: ROLLBACK",
+          "theory": "**ROLLBACK** deshace todos los cambios desde el último BEGIN. Es el 'Ctrl+Z' de SQL:\n`BEGIN;\n DELETE FROM ...;\n ROLLBACK;`\nDespués del ROLLBACK, la tabla queda como estaba.",
+          "description": "Demuestra cómo revertir una operación: inicia una transacción, elimina de 'appointments' las citas con 'patient_id' = 999, y luego usa ROLLBACK para deshacer todo.",
+          "hint": "BEGIN inicia la transacción\nDELETE FROM appointments WHERE patient_id = 999\nROLLBACK deshace todos los cambios desde BEGIN\nÚtil cuando detectas un error y quieres revertir",
+          "expected": "BEGIN; DELETE FROM appointments WHERE patient_id = 999; ROLLBACK"
+        },
+        {
+          "id": 75,
+          "title": "Crear una vista",
+          "theory": "**CREATE VIEW** crea una 'tabla virtual' basada en una consulta. Simplifica consultas complejas que se usan frecuentemente:\n`CREATE VIEW nombre AS\n SELECT ...\n FROM ...\n JOIN ...;`",
+          "description": "Crea una vista llamada 'v_patient_appointments' que muestre 'first_name' de patients (como 'patient_name'), 'last_name' de patients (como 'patient_lastname'), 'first_name' de doctors (como 'doctor_name'), 'last_name' de doctors (como 'doctor_lastname') y 'appointment_date'. Relaciona 'appointments' con 'patients' y 'doctors'.",
+          "hint": "CREATE VIEW nombre AS SELECT ...\nLa vista debe unir appointments, patients y doctors\nIncluye nombres de paciente y doctor, y la fecha\nUsa alias descriptivos para las columnas",
+          "expected": "CREATE VIEW v_patient_appointments AS SELECT p.first_name AS patient_name, p.last_name AS patient_lastname, d.first_name AS doctor_name, d.last_name AS doctor_lastname, a.appointment_date FROM appointments a INNER JOIN patients p ON a.patient_id = p.id INNER JOIN doctors d ON a.doctor_id = d.id"
+        },
+        {
+          "id": 76,
+          "title": "Consultar una vista",
+          "theory": "Una vista se consulta exactamente igual que una tabla real:\n`SELECT * FROM nombre_vista\n WHERE condicion;`",
+          "description": "Consulta la vista 'v_patient_appointments' para obtener todas las citas cuya 'appointment_date' esté en el año 2024.",
+          "hint": "Consulta la vista como si fuera una tabla normal\nSELECT * FROM v_patient_appointments\nFiltra por appointment_date con BETWEEN\nRango: '2024-01-01' a '2024-12-31'",
+          "expected": "SELECT * FROM v_patient_appointments WHERE appointment_date BETWEEN '2024-01-01' AND '2024-12-31'"
+        },
+        {
+          "id": 77,
+          "title": "DROP VIEW",
+          "theory": "**DROP VIEW** elimina una vista existente. No afecta las tablas subyacentes:\n`DROP VIEW nombre_vista;`",
+          "description": "Elimina la vista 'v_patient_appointments' del sistema.",
+          "hint": "DROP VIEW elimina una vista existente.\nSintaxis: DROP VIEW nombre_vista\nNo afecta las tablas subyacentes",
+          "expected": "DROP VIEW v_patient_appointments"
+        },
+        {
+          "id": 78,
+          "title": "DROP INDEX",
+          "theory": "**DROP INDEX** elimina un índice. Los datos no se afectan, solo se pierde la optimización:\n`DROP INDEX nombre_indice ON tabla;`",
+          "description": "Elimina el índice 'idx_patients_lastname' de la tabla 'patients'.",
+          "hint": "DROP INDEX elimina un índice existente.\nSintaxis: DROP INDEX nombre_indice ON nombre_tabla",
+          "expected": "DROP INDEX idx_patients_lastname ON patients"
+        },
+        {
+          "id": 79,
+          "title": "UNION",
+          "theory": "**UNION** combina los resultados de dos SELECT en uno solo, eliminando duplicados:\n`SELECT col FROM tabla1\n UNION\n SELECT col FROM tabla2;`\nAmbos SELECT deben tener el mismo número de columnas.",
+          "description": "Genera un listado unificado con 'first_name' y 'last_name' de la tabla 'patients' combinado con 'first_name' y 'last_name' de la tabla 'doctors'. Elimina duplicados.",
+          "hint": "UNION combina resultados de dos SELECT y elimina duplicados.\nAmbos SELECT deben tener el mismo número de columnas.\nSintaxis: SELECT ... UNION SELECT ...",
+          "expected": "SELECT first_name, last_name FROM patients UNION SELECT first_name, last_name FROM doctors"
+        },
+        {
+          "id": 80,
+          "title": "UNION ALL",
+          "theory": "**UNION ALL** es igual que UNION pero conserva duplicados. Es más rápido porque no necesita comparar filas:\n`SELECT col FROM tabla1\n UNION ALL\n SELECT col FROM tabla2;`",
+          "description": "Igual que el anterior pero incluyendo duplicados: combina 'first_name' y 'last_name' de 'patients' con 'first_name' y 'last_name' de 'doctors' sin eliminar repetidos.",
+          "hint": "UNION ALL es igual que UNION pero NO elimina duplicados.\nEs más rápido porque no necesita comparar filas.",
+          "expected": "SELECT first_name, last_name FROM patients UNION ALL SELECT first_name, last_name FROM doctors"
+        },
+        {
+          "id": 81,
+          "title": "Ejercicio integrador Optimización",
+          "theory": "Combina índices, transacciones, vistas y UNION en un contexto real.",
+          "description": "Ejecuta las siguientes operaciones separadas por punto y coma:\n1) Crea un índice llamado 'idx_invoices_status' sobre la columna 'status' de la tabla 'invoices'.\n2) Dentro de una transacción, inserta una factura en 'invoices' con 'patient_id' = 5, 'department_id' = 2, 'amount' = 1200.00, 'invoice_date' = '2024-09-01', 'status' = 'paid' y confirma.",
+          "hint": "Dos operaciones separadas por ;\nCREATE INDEX idx_invoices_status ON invoices(status);\nBEGIN; INSERT INTO invoices (...) VALUES (...); COMMIT",
+          "expected": "CREATE INDEX idx_invoices_status ON invoices(status); BEGIN; INSERT INTO invoices (patient_id, department_id, amount, invoice_date, status) VALUES (5, 2, 1200.00, '2024-09-01', 'paid'); COMMIT"
+        }
+      ]
+    },
+    {
+      "id": "dcl",
+      "title": "10. DCL & Permisos",
+      "description": "Control de acceso y privilegios",
+      "exercises": [
+        {
+          "id": 82,
+          "title": "CREATE USER",
+          "theory": "**CREATE USER** crea una nueva cuenta de acceso a la base de datos:\n`CREATE USER 'nombre'@'host' IDENTIFIED BY 'contraseña';`",
+          "description": "El hospital necesita una cuenta para el nuevo practicante. Crea un usuario 'intern' en el host 'localhost' con contraseña 'temp123'.",
+          "hint": "CREATE USER crea una nueva cuenta de base de datos.\nSintaxis: CREATE USER 'nombre'@'host' IDENTIFIED BY 'contraseña'",
+          "expected": "CREATE USER 'intern'@'localhost' IDENTIFIED BY 'temp123'"
+        },
+        {
+          "id": 83,
+          "title": "GRANT SELECT",
+          "theory": "**GRANT** otorga permisos específicos a un usuario sobre una tabla o base de datos:\n`GRANT SELECT ON base.tabla TO 'usuario'@'host';`",
+          "description": "El practicante solo debe poder leer datos de la tabla 'patients' en la base 'hospital'. Otórgale permiso SELECT.",
+          "hint": "GRANT otorga privilegios a un usuario.\nSintaxis: GRANT tipo_permiso ON base.tabla TO 'usuario'@'host'",
+          "expected": "GRANT SELECT ON hospital.patients TO 'intern'@'localhost'"
+        },
+        {
+          "id": 84,
+          "title": "GRANT múltiples privilegios",
+          "theory": "Puedes otorgar múltiples permisos en una sola sentencia separándolos con comas:\n`GRANT SELECT, INSERT ON base.tabla TO 'usuario'@'host';`",
+          "description": "El doctor 'dr_schmidt' (en 'localhost') necesita poder consultar e insertar datos en la tabla 'appointments' de la base 'hospital'. Otórgale ambos permisos.",
+          "hint": "Puedes otorgar varios privilegios separados por comas.\nSintaxis: GRANT SELECT, INSERT ON base.tabla TO 'usuario'@'host'",
+          "expected": "GRANT SELECT, INSERT ON hospital.appointments TO 'dr_schmidt'@'localhost'"
+        },
+        {
+          "id": 85,
+          "title": "REVOKE",
+          "theory": "**REVOKE** retira permisos previamente otorgados:\n`REVOKE SELECT ON base.tabla FROM 'usuario'@'host';`",
+          "description": "Revoca el permiso SELECT sobre 'hospital.patients' al usuario 'intern'@'localhost'.",
+          "hint": "REVOKE quita privilegios previamente otorgados.\nSintaxis: REVOKE tipo_permiso ON base.tabla FROM 'usuario'@'host'",
+          "expected": "REVOKE SELECT ON hospital.patients FROM 'intern'@'localhost'"
+        },
+        {
+          "id": 86,
+          "title": "DROP USER",
+          "theory": "**DROP USER** elimina una cuenta de la base de datos por completo:\n`DROP USER 'nombre'@'host';`",
+          "description": "El practicante 'intern'@'localhost' terminó su período. Elimina su cuenta del sistema.",
+          "hint": "DROP USER elimina una cuenta de base de datos.\nSintaxis: DROP USER 'nombre'@'host'",
+          "expected": "DROP USER 'intern'@'localhost'"
+        },
+        {
+          "id": 87,
+          "title": "Ejercicio integrador DCL",
+          "theory": "Combina la gestión completa del ciclo de vida de un usuario: creación, asignación de permisos y revocación.",
+          "description": "El hospital contrata a un nuevo analista de datos ('analyst'@'localhost', contraseña 'data2024'). Ejecuta las siguientes operaciones separadas por punto y coma:\n1) Crea el usuario.\n2) Otórgale permisos SELECT e INSERT sobre 'hospital.invoices'.\n3) Revócale el permiso INSERT (decidieron que solo debe leer).",
+          "hint": "Tres operaciones DCL separadas por ;\nCREATE USER ... IDENTIFIED BY ...;\nGRANT SELECT, INSERT ON ... TO ...;\nREVOKE INSERT ON ... FROM ...;",
+          "expected": "CREATE USER 'analyst'@'localhost' IDENTIFIED BY 'data2024'; GRANT SELECT, INSERT ON hospital.invoices TO 'analyst'@'localhost'; REVOKE INSERT ON hospital.invoices FROM 'analyst'@'localhost'"
+        }
+      ]
+    }
+  ]
+}

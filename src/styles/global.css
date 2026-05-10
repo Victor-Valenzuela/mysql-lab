@@ -1,0 +1,328 @@
+@import "tailwindcss";
+
+@theme {
+    --color-db-green: #10b981;
+    --color-db-cyan: #06b6d4;
+    --color-db-dark: #0f172a;
+    --color-db-panel: #1e293b;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Scrollbar - Dark */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+:root.light ::-webkit-scrollbar-track {
+    background: #EFEEED;
+}
+
+:root.light ::-webkit-scrollbar-thumb {
+    background: #C4C0BC;
+}
+
+:root.light ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Theme toggle switch */
+.theme-switch {
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: #334155;
+}
+
+.theme-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #f8fafc;
+    transition: transform 0.3s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+:root.light .theme-switch {
+    background-color: #10b981;
+}
+
+:root.light .theme-switch::after {
+    transform: translateX(20px);
+}
+
+/* Light mode font weight boost */
+:root.light h1,
+:root.light h2 {
+    font-weight: 800;
+}
+
+/* ========== LIGHT MODE ========== */
+
+/* Backgrounds - warm gray base */
+:root.light .bg-\[\#0f172a\] {
+    background-color: #EFEEED !important;
+}
+
+:root.light .bg-\[\#0f172a\]\/95 {
+    background-color: rgba(239, 238, 237, 0.97) !important;
+}
+
+:root.light .bg-\[\#0a0f1e\] {
+    background-color: #E8E6E4 !important;
+}
+
+:root.light .bg-\[\#1a1f2e\] {
+    background-color: #F8FAFC !important;
+}
+
+:root.light .bg-\[\#1e293b\] {
+    background-color: #FFFFFF !important;
+}
+
+:root.light .bg-slate-900\/50 {
+    background-color: #FFFFFF !important;
+}
+
+:root.light .bg-slate-900\/30 {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+:root.light .bg-slate-800 {
+    background-color: #FFFFFF !important;
+    border: 1px solid #D4D0CC !important;
+}
+
+:root.light .bg-slate-800\/50 {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid #D4D0CC !important;
+}
+
+:root.light .bg-white\/5 {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Text - high contrast */
+:root.light .text-white {
+    color: #1A202C !important;
+}
+
+:root.light .text-slate-300 {
+    color: #2D3748 !important;
+}
+
+:root.light .text-slate-400 {
+    color: #4A5568 !important;
+}
+
+:root.light .text-slate-500 {
+    color: #718096 !important;
+}
+
+:root.light .text-slate-600 {
+    color: #4A5568 !important;
+}
+
+/* KEEP text white on colored buttons */
+:root.light .bg-emerald-600 {
+    color: #ffffff !important;
+}
+
+:root.light .bg-emerald-500 {
+    color: #ffffff !important;
+}
+
+:root.light .bg-cyan-600 {
+    color: #ffffff !important;
+}
+
+:root.light .bg-cyan-500 {
+    color: #ffffff !important;
+}
+
+:root.light .bg-red-600 {
+    color: #ffffff !important;
+}
+
+:root.light a.bg-emerald-600 {
+    color: #ffffff !important;
+}
+
+/* Borders */
+:root.light .border-white\/5 {
+    border-color: #D4D0CC !important;
+}
+
+:root.light .border-white\/10 {
+    border-color: #D4D0CC !important;
+}
+
+/* Hover */
+:root.light .hover\:bg-white\/5:hover {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+:root.light .hover\:bg-slate-700:hover {
+    background-color: #E8E6E4 !important;
+}
+
+:root.light .hover\:text-white:hover {
+    color: #1A202C !important;
+}
+
+/* Sidebar active */
+:root.light .bg-emerald-500\/10 {
+    background-color: rgba(16, 185, 129, 0.2) !important;
+    border-left: 3px solid #10b981 !important;
+}
+
+:root.light .bg-emerald-500\/20 {
+    background-color: rgba(16, 185, 129, 0.25) !important;
+}
+
+/* Hint box */
+:root.light .bg-amber-900\/10 {
+    background-color: #FEFCE8 !important;
+}
+
+:root.light .border-amber-500\/20 {
+    border-color: #FDE68A !important;
+}
+
+:root.light .text-amber-200\/80 {
+    color: #78350F !important;
+}
+
+:root.light .text-amber-400 {
+    color: #92400E !important;
+}
+
+/* Modal */
+:root.light .bg-black\/60 {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Editor dots */
+:root.light .bg-red-500\/50 {
+    background-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+:root.light .bg-yellow-500\/50 {
+    background-color: rgba(234, 179, 8, 0.4) !important;
+}
+
+:root.light .bg-green-500\/50 {
+    background-color: rgba(34, 197, 94, 0.4) !important;
+}
+
+/* Sidebar active text - force dark in light mode */
+:root.light .nav-btn.text-emerald-400 {
+    color: #1A202C !important;
+}
+
+/* CodeMirror light mode syntax colors */
+:root.light .cm-editor {
+    background-color: #F8FAFC !important;
+}
+
+:root.light .cm-editor .cm-content {
+    color: #1A202C !important;
+}
+
+:root.light .cm-editor .cm-gutters {
+    background-color: #F1F5F9 !important;
+    color: #94a3b8 !important;
+    border-right: 1px solid #E2E8F0 !important;
+}
+
+:root.light .cm-editor .cm-activeLineGutter {
+    background-color: #EDF2F7 !important;
+}
+
+:root.light .cm-editor .cm-activeLine {
+    background-color: #EDF2F7 !important;
+}
+
+:root.light .cm-editor .cm-cursor {
+    border-left-color: #1A202C !important;
+}
+
+:root.light .cm-editor .cm-selectionBackground {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+:root.light .cm-editor .ͼb {
+    color: #6D28D9 !important;
+}
+
+/* keywords: purple */
+:root.light .cm-editor .ͼd {
+    color: #0369A1 !important;
+}
+
+/* strings: blue */
+:root.light .cm-editor .ͼc {
+    color: #B45309 !important;
+}
+
+/* numbers: amber */
+:root.light .cm-editor .ͼe {
+    color: #6B7280 !important;
+}
+
+/* comments: gray */
+:root.light .cm-editor .ͼm {
+    color: #047857 !important;
+}
+
+/* types/functions: green */
+
+/* Hide CodeMirror focus outline in light mode */
+:root.light .cm-editor.cm-focused {
+    outline: none !important;
+}
+
+:root.light .cm-editor .cm-line {
+    border: none !important;
+}
+
+:root.light .cm-editor.cm-focused .cm-selectionLayer .cm-selectionBackground {
+    background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+/* Light mode: editor content area slightly different from empty space */
+:root.light .cm-editor .cm-content {
+    background-color: #FFFFFF !important;
+}
+
+:root.light .cm-editor .cm-scroller {
+    background-color: #F1F5F9 !important;
+}
+
+/* Theory code blocks in light mode */
+:root.light .theory-block code {
+    background-color: #E2E8F0 !important;
+    color: #1E293B !important;
+}
