@@ -28,6 +28,7 @@
         "validate": "Prüfen",
         "hint": "Hinweis",
         "schemaToggle": "Tabellenschema anzeigen",
+        "resetDb": "DB zurücksetzen",
         "hintPlaceholder": "Klicke \"💡 Hinweis\" wenn du Hilfe brauchst",
         "result": "Ergebnis",
         "loading": "Datenbank wird geladen...",

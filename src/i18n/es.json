@@ -28,6 +28,7 @@
         "validate": "Verificar",
         "hint": "Pista",
         "schemaToggle": "Ver esquema de tablas",
+        "resetDb": "Reiniciar DB",
         "hintPlaceholder": "Pulsa \"💡 Pista\" si necesitas ayuda",
         "result": "Resultado",
         "loading": "Cargando base de datos...",
