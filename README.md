@@ -156,35 +156,33 @@ firebase deploy --only hosting:sql-lab-de
 
 ## Language Switching (i18n)
 
-The project supports multiple languages through a simple import switch:
+The entire project switches language by changing a single line in `src/i18n/index.ts`:
+
+```ts
+const LANG = "es"; // 'es' = español, 'de' = alemán
+```
+
+This controls everything: UI texts, section introductions, and exercise content (titles, descriptions, theories, hints).
 
 **Files:**
 
-- `src/i18n/es.json` — Spanish UI texts
-- `src/i18n/de.json` — German UI texts
-- `src/i18n/intros-es.json` — Spanish section introductions
-- `src/i18n/intros-de.json` — German section introductions
-- `src/i18n/index.ts` — Active language selector
+- `src/i18n/index.ts` — Language selector (change LANG here)
+- `src/i18n/es.json` / `de.json` — UI texts
+- `src/i18n/intros-es.json` / `intros-de.json` — Section introductions
+- `src/data/exercises-es.json` / `exercises-de.json` — Exercise content
 
-**To switch language:**
+**Deploy workflow:**
 
-1. In `src/i18n/index.ts`, change the import:
+1. Set `LANG` to the desired language in `src/i18n/index.ts`
+2. Build and deploy:
 
-```ts
-import t from "./es.json"; // Spanish
-// import t from './de.json';  // German
+```bash
+npm run build
+firebase deploy --only hosting:sql-lab-es   # Spanish
+firebase deploy --only hosting:sql-lab-de   # German
 ```
 
-2. In `src/pages/lessons/[category]/index.astro`, change the intros import:
-
-```ts
-import intros from "../../../i18n/intros-es.json"; // Spanish
-// import intros from "../../../i18n/intros-de.json";  // German
-```
-
-3. Rebuild and deploy to the corresponding Firebase site.
-
-**Note:** Exercise content (titles, descriptions, theories, hints) in `src/data/exercises.json` must also be translated separately for each language version.
+**Note:** In dev mode (`npm run dev`), restart the server after changing `LANG` for JSON changes to take effect. For production builds this is not needed.
 
 ## MySQL → SQLite Transformation
 

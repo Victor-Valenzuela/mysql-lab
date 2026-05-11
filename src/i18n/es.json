@@ -27,7 +27,7 @@
         "run": "Ejecutar",
         "validate": "Verificar",
         "hint": "Pista",
-        "resetDb": "Reiniciar DB",
+        "schemaToggle": "Ver esquema de tablas",
         "hintPlaceholder": "Pulsa \"💡 Pista\" si necesitas ayuda",
         "result": "Resultado",
         "loading": "Cargando base de datos...",

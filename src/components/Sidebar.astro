@@ -1,5 +1,5 @@
 ---
-import exercisesData from "../data/exercises.json";
+import { exercisesData } from "../i18n/index.ts";
 
 const { base = '/', currentExerciseId = null, currentCategoryId = null } = Astro.props;
 const allCategories = exercisesData.categories;

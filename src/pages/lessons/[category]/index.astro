@@ -1,11 +1,11 @@
 ---
 import "../../../styles/global.css";
-import exercisesData from "../../../data/exercises.json";
+import { exercisesData } from "../../../i18n/index.ts";
+import t from "../../../i18n/index.ts";
+import { introsData as intros } from "../../../i18n/index.ts";
 import Header from "../../../components/Header.astro";
 import Sidebar from "../../../components/Sidebar.astro";
 import MobileMenu from "../../../components/MobileMenu.astro";
-import t from "../../../i18n/index.ts";
-import intros from "../../../i18n/intros-es.json";
 
 export function getStaticPaths() {
   return exercisesData.categories.map((cat) => ({
