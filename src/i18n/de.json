@@ -43,7 +43,7 @@
     },
     "complete": {
         "title": "Herzlichen Glückwunsch!",
-        "subtitle": "Du hast SQL<span class=\"text-white\">_Lab</span> abgeschlossen",
+        "subtitle": "Du hast <span class=\"text-white\">SQL</span><span class=\"text-emerald-400\">_Lab</span> abgeschlossen",
         "message": "Du beherrschst nun die Grundlagen von MySQL: vom Erstellen von Tabellen bis zur Verwaltung von Berechtigungen, über komplexe Abfragen, JOINs, Unterabfragen und Optimierung. Du hast jetzt die Werkzeuge, um mit echten Datenbanken zu arbeiten.",
         "completed": "Abgeschlossen",
         "sections": "Abschnitte",
