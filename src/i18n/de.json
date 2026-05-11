@@ -2,7 +2,7 @@
     "lang": "de",
     "site": {
         "title": "SQL Lab — Interaktive MySQL-Übungen",
-        "subtitle": "Lerne MySQL durch echte Queries"
+        "subtitle": "Lerne MySQL durch echte Abfragen"
     },
     "nav": {
         "backToStart": "Zurück zum Start",
@@ -15,7 +15,7 @@
         "relationalDescription": "Eine relationale Datenbank organisiert Informationen in <span class=\"text-white font-medium\">Tabellen</span>, die durch <span class=\"text-white font-medium\">Beziehungen</span> (Foreign Keys) miteinander verbunden sind. Zum Beispiel: Ein Patient hat Termine, jeder Termin hat einen Arzt, jeder Arzt gehört zu einer Abteilung. Diese Verbindungen ermöglichen komplexe Abfragen ohne Datenduplizierung.",
         "aboutExercises": "Über diese Übungen",
         "aboutDescription1": "Du arbeitest mit einer <span class=\"text-white font-medium\">Krankenhaus</span>-Datenbank, die 10 verknüpfte Tabellen und über 9.000 Datensätze enthält: Patienten, Ärzte, Abteilungen, Termine, Diagnosen, Medikamente, Rezepte, Zimmer, Aufnahmen und Rechnungen.",
-        "aboutDescription2": "Schreibe deine Queries in <span class=\"text-white font-medium\">MySQL-Syntax</span>. Das System führt sie in Echtzeit gegen die Datenbank aus und überprüft dein Ergebnis.",
+        "aboutDescription2": "Schreibe deine Abfragen in <span class=\"text-white font-medium\">MySQL-Syntax</span>. Das System führt sie in Echtzeit gegen die Datenbank aus und überprüft dein Ergebnis.",
         "exercises": "Übungen",
         "tables": "Tabellen",
         "records": "Datensätze",
@@ -33,7 +33,7 @@
         "result": "Ergebnis",
         "loading": "Datenbank wird geladen...",
         "loadError": "Fehler beim Laden:",
-        "correct": "Richtig! Deine Query liefert das erwartete Ergebnis.",
+        "correct": "Richtig! Deine Abfrage liefert das erwartete Ergebnis.",
         "incorrect": "Falsch. Überprüfe deine Abfrage.",
         "rows": "Zeilen",
         "moreRows": "weitere Zeilen"
@@ -64,8 +64,8 @@
         "semicolonRequired": "Jede SQL-Anweisung muss mit einem Semikolon (;) enden.",
         "dbNotLoaded": "Datenbank nicht geladen.",
         "rowsAffected": "Betroffene Zeilen",
-        "correct": "Richtig! Deine Query liefert das erwartete Ergebnis.",
-        "correctSyntax": "Richtig! Deine Query hat die erwartete Syntax.",
+        "correct": "Richtig! Deine Abfrage liefert das erwartete Ergebnis.",
+        "correctSyntax": "Richtig! Deine Abfrage hat die erwartete Syntax.",
         "incorrectSyntax": "Falsch. Überprüfe die Syntax deiner Abfrage.",
         "incorrect": "Falsch. ",
         "expectedColumns": "Erwartete Spalten",
