@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/inter/900.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "@fontsource/jetbrains-mono/700.css";
 
 @theme {
     --color-db-green: #10b981;
@@ -83,7 +90,7 @@ body {
 
 /* Backgrounds - warm gray base */
 :root.light .bg-\[\#0f172a\] {
-    background-color: #EFEEED !important;
+    background-color: #ede8e6 !important;
 }
 
 :root.light .bg-\[\#0f172a\]\/95 {
@@ -107,7 +114,7 @@ body {
 }
 
 :root.light .bg-slate-900\/30 {
-    background-color: rgba(255, 255, 255, 0.8) !important;
+    background-color: #FFFFFF !important;
 }
 
 :root.light .bg-slate-800 {
@@ -325,4 +332,26 @@ body {
 :root.light .theory-block code {
     background-color: #E2E8F0 !important;
     color: #1E293B !important;
+}
+
+/* Override font-display to prevent FOUT */
+@font-face {
+    font-family: 'Inter';
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-display: block;
+}
+
+/* Light mode: main content area slightly warmer */
+:root.light main {
+    background-color: #ede8e6;
+    border-radius: 0;
+}
+
+/* Light mode: sidebar border shadow */
+:root.light aside {
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
 }

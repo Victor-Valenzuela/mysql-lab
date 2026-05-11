@@ -1,0 +1,48 @@
+---
+import exercisesData from "../data/exercises.json";
+import t from "../i18n/index.ts";
+
+const { showMenu = false, base = '/' } = Astro.props;
+const totalExercises = exercisesData.categories.flatMap(c => c.exercises).length;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-[#0f172a]/95 backdrop-blur border-b border-white/5">
+  <div class="px-4 lg:px-6 py-3 flex items-center justify-between">
+    <!-- Left: hamburger/logo -->
+    <div class="flex items-center gap-3 min-w-0">
+      {showMenu && (
+        <button id="btn-menu" class="lg:hidden w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white transition">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      )}
+      <a href={base} class="hidden lg:flex items-center gap-3 hover:opacity-80 transition">
+        <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+          </svg>
+        </div>
+        <h1 class="text-lg font-bold text-white tracking-tight">SQL<span class="text-emerald-400">_Lab</span></h1>
+      </a>
+      <span class="lg:hidden text-sm font-bold text-white">SQL<span class="text-emerald-400">_Lab</span></span>
+    </div>
+    <!-- Center: progress -->
+    <div class="flex items-center gap-2 lg:gap-3">
+      <span id="progress-text" class="text-[10px] sm:text-xs text-slate-500 font-mono">0 / {totalExercises}</span>
+      <div class="w-12 sm:w-24 lg:w-32 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+        <div id="progress-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+    </div>
+    <!-- Right: theme toggle -->
+    <div class="flex items-center gap-2">
+      <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+      </svg>
+      <div id="btn-theme" class="theme-switch" aria-label={t.nav.themeToggle}></div>
+      <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+    </div>
+  </div>
+</header>

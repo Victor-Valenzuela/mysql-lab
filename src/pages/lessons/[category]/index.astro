@@ -1,91 +1,11 @@
 ---
 import "../../../styles/global.css";
 import exercisesData from "../../../data/exercises.json";
-
-const introContent: Record<string, { title: string; paragraphs: string[] }> = {
-  ddl: {
-    title: "¿Qué es DDL?",
-    paragraphs: [
-      "**DDL** (Data Definition Language) es el subconjunto de SQL que se encarga de definir la estructura de la base de datos: crear tablas, modificarlas, agregar restricciones y establecer relaciones entre ellas.",
-      "Piensa en DDL como el plano arquitectónico de tu base de datos. Antes de guardar un solo dato, necesitas definir dónde y cómo se almacenará. ¿Qué columnas tiene cada tabla? ¿Qué tipo de dato acepta cada una? ¿Cuáles son obligatorias?",
-      "En esta sección aprenderás a crear tablas con **CREATE TABLE**, definir llaves primarias y foráneas, establecer restricciones como **NOT NULL** y **UNIQUE**, y modificar tablas existentes con **ALTER TABLE**."
-    ]
-  },
-  "dml-basic": {
-    title: "¿Qué es DML?",
-    paragraphs: [
-      "**DML** (Data Manipulation Language) es el subconjunto de SQL que permite manipular los datos dentro de las tablas: insertar nuevos registros, actualizar los existentes y eliminar los que ya no se necesitan.",
-      "Si DDL construye la estructura, DML la llena de vida. Es la diferencia entre tener un edificio vacío y uno con personas trabajando dentro.",
-      "En esta sección aprenderás **INSERT** (agregar datos), **UPDATE** (modificar datos existentes) y **DELETE** (eliminar registros). La regla de oro: siempre usa **WHERE** en UPDATE y DELETE, o afectarás toda la tabla."
-    ]
-  },
-  "select-basics": {
-    title: "Consultas con SELECT",
-    paragraphs: [
-      "**SELECT** es el comando más usado en SQL. Permite extraer información de la base de datos aplicando filtros, condiciones y transformaciones.",
-      "Con **WHERE** puedes filtrar registros por condiciones específicas: igualdad, comparación, patrones de texto (**LIKE**), listas de valores (**IN**), rangos (**BETWEEN**) y valores nulos (**IS NULL**).",
-      "En esta sección dominarás las consultas básicas que forman la base de todo lo que viene después: JOINs, subconsultas y agregaciones."
-    ]
-  },
-  "order-limit": {
-    title: "Ordenar y paginar",
-    paragraphs: [
-      "Una consulta sin orden devuelve resultados en un orden impredecible. **ORDER BY** te permite controlar exactamente cómo se presentan los datos: alfabéticamente, por fecha, por monto, ascendente o descendente.",
-      "**LIMIT** y **OFFSET** son esenciales para la paginación: mostrar resultados en páginas de 10, 20 o 50 registros, como lo hace cualquier aplicación web moderna.",
-      "En esta sección aprenderás a ordenar resultados, limitar la cantidad mostrada y paginar datos para interfaces de usuario."
-    ]
-  },
-  aggregation: {
-    title: "Funciones de agregación",
-    paragraphs: [
-      "Las funciones de agregación resumen múltiples filas en un solo valor: contar registros (**COUNT**), sumar valores (**SUM**), calcular promedios (**AVG**), encontrar máximos (**MAX**) y mínimos (**MIN**).",
-      "**GROUP BY** permite agrupar filas que comparten un valor y aplicar funciones de agregación a cada grupo por separado. **HAVING** filtra esos grupos después de la agregación.",
-      "En esta sección aprenderás a generar reportes estadísticos: totales por departamento, promedios por categoría, conteos por grupo y filtros sobre resultados agregados."
-    ]
-  },
-  joins: {
-    title: "Relacionar tablas con JOINs",
-    paragraphs: [
-      "En una base de datos relacional, la información está distribuida en múltiples tablas conectadas entre sí. Los **JOINs** permiten combinar datos de dos o más tablas en una sola consulta.",
-      "**INNER JOIN** devuelve solo los registros que tienen coincidencia en ambas tablas. **LEFT JOIN** incluye todos los registros de la tabla izquierda aunque no tengan coincidencia en la derecha.",
-      "En esta sección aprenderás a cruzar tablas, combinar información de múltiples fuentes y generar reportes que involucren relaciones entre entidades."
-    ]
-  },
-  subqueries: {
-    title: "Subconsultas y CTEs",
-    paragraphs: [
-      "Una subconsulta es una consulta dentro de otra consulta. Permite usar el resultado de un **SELECT** como filtro, valor de comparación o tabla temporal dentro de otra operación.",
-      "Los **CTEs** (Common Table Expressions) con **WITH** crean tablas temporales con nombre que puedes reutilizar en la consulta principal. Son más legibles que las subconsultas anidadas.",
-      "En esta sección aprenderás a resolver problemas complejos descomponiéndolos en consultas más pequeñas: filtrar por promedios, verificar existencia con **EXISTS** y crear resultados intermedios."
-    ]
-  },
-  dates: {
-    title: "Funciones de fecha",
-    paragraphs: [
-      "Las bases de datos almacenan fechas en formatos específicos y ofrecen funciones para manipularlas: extraer partes (año, mes, día), calcular diferencias, filtrar por rangos temporales.",
-      "En MySQL, funciones como **YEAR()**, **MONTH()**, **NOW()**, **DATE_SUB()** y **BETWEEN** permiten trabajar con fechas de forma flexible y precisa.",
-      "En esta sección aprenderás a filtrar por períodos, extraer componentes de fechas y calcular rangos relativos (últimos 30 días, este año, etc.)."
-    ]
-  },
-  optimization: {
-    title: "Optimización y control",
-    paragraphs: [
-      "Una base de datos con millones de registros puede volverse lenta si no se optimiza. Los **índices** aceleran las búsquedas sin modificar los datos, como el índice de un libro.",
-      "Las **transacciones** (**BEGIN**, **COMMIT**, **ROLLBACK**) garantizan que operaciones múltiples se ejecuten como una unidad atómica: o se completan todas, o no se completa ninguna.",
-      "Las **vistas** (**CREATE VIEW**) crean 'tablas virtuales' basadas en consultas complejas, simplificando el acceso a datos que se consultan frecuentemente.",
-      "En esta sección aprenderás a optimizar rendimiento con índices, proteger la integridad con transacciones y simplificar consultas con vistas."
-    ]
-  },
-  dcl: {
-    title: "Control de acceso (DCL)",
-    paragraphs: [
-      "**DCL** (Data Control Language) gestiona quién puede hacer qué en la base de datos. En un entorno real con múltiples usuarios, no todos deberían tener acceso a todo.",
-      "**CREATE USER** crea cuentas de acceso. **GRANT** otorga permisos específicos (leer, escribir, eliminar) sobre tablas o bases de datos completas. **REVOKE** los retira.",
-      "Un administrador de base de datos (DBA) usa DCL para garantizar que un desarrollador junior no pueda borrar tablas de producción, o que una aplicación solo pueda leer ciertos datos.",
-      "En esta sección aprenderás a crear usuarios, asignar y revocar permisos, y entender el principio de mínimo privilegio."
-    ]
-  }
-};
+import Header from "../../../components/Header.astro";
+import Sidebar from "../../../components/Sidebar.astro";
+import MobileMenu from "../../../components/MobileMenu.astro";
+import t from "../../../i18n/index.ts";
+import intros from "../../../i18n/intros-es.json";
 
 export function getStaticPaths() {
   return exercisesData.categories.map((cat) => ({
@@ -96,94 +16,69 @@ export function getStaticPaths() {
 
 const { category: currentCategory, allCategories } = Astro.props;
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
-const intro = introContent[currentCategory.id];
+const intro = (intros as any)[currentCategory.id];
 const firstExercise = currentCategory.exercises[0];
-const allExercises = allCategories.flatMap((cat) => cat.exercises);
 ---
 
-<html lang="es" class="scroll-smooth">
+<html lang={t.lang} class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>SQL Lab — {currentCategory.title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     <script is:inline>
       if (localStorage.getItem('sql-lab-theme') === 'light') document.documentElement.classList.add('light');
     </script>
   </head>
 
   <body class="bg-[#0f172a] text-slate-300 font-sans min-h-screen">
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-[#0f172a]/95 backdrop-blur border-b border-white/5">
-      <div class="px-4 lg:px-6 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <a href={base} class="flex items-center gap-3 hover:opacity-80 transition">
-            <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-              <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
-              </svg>
+    <Header base={base} showMenu={true} />
+    <MobileMenu base={base} currentCategoryId={currentCategory.id} />
+
+    <div class="flex pt-14">
+      <aside class="hidden lg:block w-72 h-[calc(100vh-56px)] overflow-y-auto fixed bg-[#0a0f1e] border-r border-white/5 p-6">
+        <Sidebar base={base} currentCategoryId={currentCategory.id} />
+      </aside>
+
+      <main class="w-full lg:ml-72 p-6 lg:p-10">
+        <div class="w-full">
+          <div class="mb-2">
+            <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">{currentCategory.title}</span>
+          </div>
+
+          <h2 class="text-3xl lg:text-4xl font-black text-white tracking-tight mb-6">{intro.title}</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <div class="space-y-4">
+              {intro.paragraphs.map((p: string) => (
+                <p class="text-sm lg:text-base text-slate-400 leading-relaxed" set:html={p
+                  .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
+                  .replace(/`([^`]+)`/g, '<code class="bg-white/10 px-1.5 py-0.5 rounded text-cyan-300 text-[11px] font-mono">$1</code>')
+                }></p>
+              ))}
             </div>
-            <h1 class="text-lg font-bold text-white tracking-tight">SQL<span class="text-emerald-400">_Lab</span></h1>
-          </a>
-        </div>
-        <div class="flex items-center gap-3">
-          <span id="progress-text" class="text-xs text-slate-500 font-mono">0 / {allExercises.length}</span>
-          <div class="w-24 lg:w-32 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-            <div id="progress-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+
+            <div class="p-5 bg-slate-900/50 rounded-2xl border border-white/5 h-fit">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">{t.intro.exercisesInSection}</p>
+              <div class="space-y-1">
+                {currentCategory.exercises.map((ex) => (
+                  <p class="text-sm text-slate-400">{ex.id}. {ex.title}</p>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div class="max-w-md mx-auto">
+            <a href={`${base}lessons/${currentCategory.id}/${firstExercise.id}`} class="block w-full px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-500/20 text-sm uppercase tracking-widest text-center">
+              {t.intro.startExercises}
+            </a>
           </div>
         </div>
-        <!-- Theme toggle -->
-        <div class="flex items-center gap-2">
-          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-          </svg>
-          <div id="btn-theme" class="theme-switch" aria-label="Cambiar tema"></div>
-          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-        </div>
-      </div>
-    </header>
-
-    <div class="pt-14 min-h-screen flex items-center justify-center p-6">
-      <div class="max-w-2xl w-full">
-        <!-- Section badge -->
-        <div class="mb-6">
-          <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">{currentCategory.title}</span>
-        </div>
-
-        <!-- Intro title -->
-        <h2 class="text-3xl lg:text-4xl font-black text-white tracking-tight mb-8">{intro.title}</h2>
-
-        <!-- Intro paragraphs -->
-        <div class="space-y-4 mb-10">
-          {intro.paragraphs.map((p) => (
-            <p class="text-sm lg:text-base text-slate-400 leading-relaxed" set:html={p
-              .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
-              .replace(/`([^`]+)`/g, '<code class="bg-white/10 px-1.5 py-0.5 rounded text-cyan-300 text-[11px] font-mono">$1</code>')
-            }></p>
-          ))}
-        </div>
-
-        <!-- Exercises in this section -->
-        <div class="mb-10 p-5 bg-slate-900/50 rounded-2xl border border-white/5">
-          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Ejercicios en esta sección</p>
-          <div class="space-y-1">
-            {currentCategory.exercises.map((ex) => (
-              <p class="text-sm text-slate-400">{ex.id}. {ex.title}</p>
-            ))}
-          </div>
-        </div>
-
-        <!-- Start button -->
-        <a href={`${base}lessons/${currentCategory.id}/${firstExercise.id}`} class="block w-full px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-500/20 text-sm uppercase tracking-widest text-center">
-          Empezar ejercicios →
-        </a>
-      </div>
+      </main>
     </div>
 
     <script>
+      // Theme
       const savedTheme = localStorage.getItem('sql-lab-theme') || 'dark';
       if (savedTheme === 'light') document.documentElement.classList.add('light');
 
@@ -191,6 +86,14 @@ const allExercises = allCategories.flatMap((cat) => cat.exercises);
         const isLight = document.documentElement.classList.toggle('light');
         localStorage.setItem('sql-lab-theme', isLight ? 'light' : 'dark');
       };
+
+      // Mobile menu
+      document.getElementById('btn-menu')?.addEventListener('click', () => {
+        document.getElementById('mobile-menu')!.classList.remove('hidden');
+      });
+      document.getElementById('menu-backdrop')?.addEventListener('click', () => {
+        document.getElementById('mobile-menu')!.classList.add('hidden');
+      });
 
       // Progress
       const completed = JSON.parse(localStorage.getItem('sql-lab-completed') || '[]');

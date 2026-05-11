@@ -1,0 +1,84 @@
+{
+    "ddl": {
+        "title": "¿Qué es DDL?",
+        "paragraphs": [
+            "**DDL** (Data Definition Language) es el subconjunto de SQL que se encarga de definir la estructura de la base de datos: crear tablas, modificarlas, agregar restricciones y establecer relaciones entre ellas.",
+            "Piensa en DDL como el plano arquitectónico de tu base de datos. Antes de guardar un solo dato, necesitas definir dónde y cómo se almacenará. ¿Qué columnas tiene cada tabla? ¿Qué tipo de dato acepta cada una? ¿Cuáles son obligatorias?",
+            "En esta sección aprenderás a crear tablas con **CREATE TABLE**, definir llaves primarias y foráneas, establecer restricciones como **NOT NULL** y **UNIQUE**, y modificar tablas existentes con **ALTER TABLE**."
+        ]
+    },
+    "dml-basic": {
+        "title": "¿Qué es DML?",
+        "paragraphs": [
+            "**DML** (Data Manipulation Language) es el subconjunto de SQL que permite manipular los datos dentro de las tablas: insertar nuevos registros, actualizar los existentes y eliminar los que ya no se necesitan.",
+            "Si DDL construye la estructura, DML la llena de vida. Es la diferencia entre tener un edificio vacío y uno con personas trabajando dentro.",
+            "En esta sección aprenderás **INSERT** (agregar datos), **UPDATE** (modificar datos existentes) y **DELETE** (eliminar registros). La regla de oro: siempre usa **WHERE** en UPDATE y DELETE, o afectarás toda la tabla."
+        ]
+    },
+    "select-basics": {
+        "title": "Consultas con SELECT",
+        "paragraphs": [
+            "**SELECT** es el comando más usado en SQL. Permite extraer información de la base de datos aplicando filtros, condiciones y transformaciones.",
+            "Con **WHERE** puedes filtrar registros por condiciones específicas: igualdad, comparación, patrones de texto (**LIKE**), listas de valores (**IN**), rangos (**BETWEEN**) y valores nulos (**IS NULL**).",
+            "En esta sección dominarás las consultas básicas que forman la base de todo lo que viene después: JOINs, subconsultas y agregaciones."
+        ]
+    },
+    "order-limit": {
+        "title": "Ordenar y paginar",
+        "paragraphs": [
+            "Una consulta sin orden devuelve resultados en un orden impredecible. **ORDER BY** te permite controlar exactamente cómo se presentan los datos: alfabéticamente, por fecha, por monto, ascendente o descendente.",
+            "**LIMIT** y **OFFSET** son esenciales para la paginación: mostrar resultados en páginas de 10, 20 o 50 registros, como lo hace cualquier aplicación web moderna.",
+            "En esta sección aprenderás a ordenar resultados, limitar la cantidad mostrada y paginar datos para interfaces de usuario."
+        ]
+    },
+    "aggregation": {
+        "title": "Funciones de agregación",
+        "paragraphs": [
+            "Las funciones de agregación resumen múltiples filas en un solo valor: contar registros (**COUNT**), sumar valores (**SUM**), calcular promedios (**AVG**), encontrar máximos (**MAX**) y mínimos (**MIN**).",
+            "**GROUP BY** permite agrupar filas que comparten un valor y aplicar funciones de agregación a cada grupo por separado. **HAVING** filtra esos grupos después de la agregación.",
+            "En esta sección aprenderás a generar reportes estadísticos: totales por departamento, promedios por categoría, conteos por grupo y filtros sobre resultados agregados."
+        ]
+    },
+    "joins": {
+        "title": "Relacionar tablas con JOINs",
+        "paragraphs": [
+            "En una base de datos relacional, la información está distribuida en múltiples tablas conectadas entre sí. Los **JOINs** permiten combinar datos de dos o más tablas en una sola consulta.",
+            "**INNER JOIN** devuelve solo los registros que tienen coincidencia en ambas tablas. **LEFT JOIN** incluye todos los registros de la tabla izquierda aunque no tengan coincidencia en la derecha.",
+            "En esta sección aprenderás a cruzar tablas, combinar información de múltiples fuentes y generar reportes que involucren relaciones entre entidades."
+        ]
+    },
+    "subqueries": {
+        "title": "Subconsultas y CTEs",
+        "paragraphs": [
+            "Una subconsulta es una consulta dentro de otra consulta. Permite usar el resultado de un **SELECT** como filtro, valor de comparación o tabla temporal dentro de otra operación.",
+            "Los **CTEs** (Common Table Expressions) con **WITH** crean tablas temporales con nombre que puedes reutilizar en la consulta principal. Son más legibles que las subconsultas anidadas.",
+            "En esta sección aprenderás a resolver problemas complejos descomponiéndolos en consultas más pequeñas: filtrar por promedios, verificar existencia con **EXISTS** y crear resultados intermedios."
+        ]
+    },
+    "dates": {
+        "title": "Funciones de fecha",
+        "paragraphs": [
+            "Las bases de datos almacenan fechas en formatos específicos y ofrecen funciones para manipularlas: extraer partes (año, mes, día), calcular diferencias, filtrar por rangos temporales.",
+            "En MySQL, funciones como **YEAR()**, **MONTH()**, **NOW()**, **DATE_SUB()** y **BETWEEN** permiten trabajar con fechas de forma flexible y precisa.",
+            "En esta sección aprenderás a filtrar por períodos, extraer componentes de fechas y calcular rangos relativos (últimos 30 días, este año, etc.)."
+        ]
+    },
+    "optimization": {
+        "title": "Optimización y control",
+        "paragraphs": [
+            "Una base de datos con millones de registros puede volverse lenta si no se optimiza. Los **índices** aceleran las búsquedas sin modificar los datos, como el índice de un libro.",
+            "Las **transacciones** (**BEGIN**, **COMMIT**, **ROLLBACK**) garantizan que operaciones múltiples se ejecuten como una unidad atómica: o se completan todas, o no se completa ninguna.",
+            "Las **vistas** (**CREATE VIEW**) crean 'tablas virtuales' basadas en consultas complejas, simplificando el acceso a datos que se consultan frecuentemente.",
+            "En esta sección aprenderás a optimizar rendimiento con índices, proteger la integridad con transacciones y simplificar consultas con vistas."
+        ]
+    },
+    "dcl": {
+        "title": "Control de acceso (DCL)",
+        "paragraphs": [
+            "**DCL** (Data Control Language) gestiona quién puede hacer qué en la base de datos. En un entorno real con múltiples usuarios, no todos deberían tener acceso a todo.",
+            "**CREATE USER** crea cuentas de acceso. **GRANT** otorga permisos específicos (leer, escribir, eliminar) sobre tablas o bases de datos completas. **REVOKE** los retira.",
+            "Un administrador de base de datos (DBA) usa DCL para garantizar que un desarrollador junior no pueda borrar tablas de producción, o que una aplicación solo pueda leer ciertos datos.",
+            "En esta sección aprenderás a crear usuarios, asignar y revocar permisos, y entender el principio de mínimo privilegio."
+        ]
+    }
+}

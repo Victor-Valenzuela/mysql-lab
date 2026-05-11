@@ -154,10 +154,37 @@ firebase deploy --only hosting:sql-lab-de
 - You can also connect custom domains in the Firebase console.
 - The `rewrites` rule ensures client-side routing works for all paths.
 
-## Known Issues / TODO
+## Language Switching (i18n)
 
-- Flash of dark theme on page navigation (mitigated with inline head script, but progress dots still flash briefly)
-- German translation pending
+The project supports multiple languages through a simple import switch:
+
+**Files:**
+
+- `src/i18n/es.json` — Spanish UI texts
+- `src/i18n/de.json` — German UI texts
+- `src/i18n/intros-es.json` — Spanish section introductions
+- `src/i18n/intros-de.json` — German section introductions
+- `src/i18n/index.ts` — Active language selector
+
+**To switch language:**
+
+1. In `src/i18n/index.ts`, change the import:
+
+```ts
+import t from "./es.json"; // Spanish
+// import t from './de.json';  // German
+```
+
+2. In `src/pages/lessons/[category]/index.astro`, change the intros import:
+
+```ts
+import intros from "../../../i18n/intros-es.json"; // Spanish
+// import intros from "../../../i18n/intros-de.json";  // German
+```
+
+3. Rebuild and deploy to the corresponding Firebase site.
+
+**Note:** Exercise content (titles, descriptions, theories, hints) in `src/data/exercises.json` must also be translated separately for each language version.
 
 ## MySQL → SQLite Transformation
 

@@ -1,0 +1,33 @@
+---
+import exercisesData from "../data/exercises.json";
+
+const { base = '/', currentExerciseId = null, currentCategoryId = null } = Astro.props;
+const allCategories = exercisesData.categories;
+---
+
+<nav class="space-y-2">
+  {allCategories.map((cat) => (
+    <details open={cat.id === currentCategoryId} class="group">
+      <summary class="cursor-pointer text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 py-1.5 rounded-md hover:bg-white/5 hover:text-slate-300 transition flex items-center gap-1">
+        <span class="text-[8px] text-slate-600 group-open:rotate-90 transition-transform hover:scale-150">▶</span>
+        <a href={`${base}lessons/${cat.id}`} class="section-link hover:text-emerald-400 hover:underline underline-offset-2 transition" onclick="event.stopPropagation()">{cat.title}</a>
+      </summary>
+      <div class="space-y-1 mt-1 ml-2">
+        {cat.exercises.map((ex) => (
+          <a
+            href={`${base}lessons/${cat.id}/${ex.id}`}
+            data-exercise-id={ex.id}
+            data-category-id={cat.id}
+            class:list={[
+              "nav-btn w-full text-left px-3 py-1.5 text-xs rounded-md hover:bg-white/5 hover:text-white transition-all flex items-center gap-2",
+              ex.id === currentExerciseId ? "bg-emerald-500/10 text-emerald-400" : "text-slate-400"
+            ]}
+          >
+            <span class="status-dot w-2 h-2 rounded-full bg-slate-700 flex-shrink-0"></span>
+            <span class="truncate">{ex.id}. {ex.title}</span>
+          </a>
+        ))}
+      </div>
+    </details>
+  ))}
+</nav>

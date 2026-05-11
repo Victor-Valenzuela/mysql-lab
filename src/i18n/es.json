@@ -1,0 +1,74 @@
+{
+    "lang": "es",
+    "site": {
+        "title": "SQL Lab — Ejercicios Interactivos de MySQL",
+        "subtitle": "Aprende MySQL escribiendo queries reales"
+    },
+    "nav": {
+        "backToStart": "Volver al inicio",
+        "themeToggle": "Cambiar tema"
+    },
+    "welcome": {
+        "whatIsSql": "¿Qué es SQL?",
+        "sqlDescription": "<span class=\"text-white font-medium\">SQL (Structured Query Language)</span> es el lenguaje estándar para comunicarte con bases de datos relacionales. Con SQL puedes crear tablas, insertar datos, consultarlos, modificarlos y eliminarlos. Es el idioma que hablan MySQL, PostgreSQL, SQLite y prácticamente cualquier base de datos del mundo.",
+        "relationalDb": "Bases de datos relacionales",
+        "relationalDescription": "Una base de datos relacional organiza la información en <span class=\"text-white font-medium\">tablas</span> conectadas entre sí mediante <span class=\"text-white font-medium\">relaciones</span> (Foreign Keys). Por ejemplo: un paciente tiene citas, cada cita tiene un médico, cada médico pertenece a un departamento. Estas conexiones permiten consultar información compleja sin duplicar datos.",
+        "aboutExercises": "Sobre estos ejercicios",
+        "aboutDescription1": "Trabajarás con una base de datos de <span class=\"text-white font-medium\">hospital</span> que contiene 10 tablas interconectadas y más de 9,000 registros: pacientes, médicos, departamentos, citas, diagnósticos, medicamentos, recetas, habitaciones, internaciones y facturas.",
+        "aboutDescription2": "Escribe tus queries en <span class=\"text-white font-medium\">sintaxis MySQL</span>. El sistema las ejecuta en tiempo real contra la base de datos y valida tu resultado.",
+        "exercises": "Ejercicios",
+        "tables": "Tablas",
+        "records": "Registros",
+        "start": "Comenzar →",
+        "resetProgress": "↺ Reiniciar progreso"
+    },
+    "exercise": {
+        "task": "Ejercicio",
+        "run": "Ejecutar",
+        "validate": "Verificar",
+        "hint": "Pista",
+        "resetDb": "Reiniciar DB",
+        "hintPlaceholder": "Pulsa \"💡 Pista\" si necesitas ayuda",
+        "result": "Resultado",
+        "loading": "Cargando base de datos...",
+        "loadError": "Error al cargar:",
+        "correct": "¡Correcto! Tu query tiene la sintaxis esperada.",
+        "incorrect": "Incorrecto. Revisa tu consulta.",
+        "rows": "filas",
+        "moreRows": "filas más"
+    },
+    "intro": {
+        "exercisesInSection": "Ejercicios en esta sección",
+        "startExercises": "Empezar ejercicios →"
+    },
+    "complete": {
+        "title": "¡Felicidades!",
+        "subtitle": "Completaste SQL<span class=\"text-white\">_Lab</span>",
+        "message": "Has dominado los fundamentos de MySQL: desde crear tablas hasta gestionar permisos, pasando por consultas complejas, JOINs, subconsultas y optimización. Ahora tienes las herramientas para trabajar con bases de datos reales.",
+        "completed": "Completados",
+        "sections": "Secciones",
+        "backToStart": "Volver al inicio",
+        "resetAndRepeat": "Reiniciar progreso y repetir"
+    },
+    "modal": {
+        "skipTitle": "¿Saltar a otro ejercicio?",
+        "skipMessage": "Aún no has resuelto el ejercicio actual. ¿Seguro que quieres continuar?",
+        "cancel": "Cancelar",
+        "continue": "Continuar",
+        "resetTitle": "¿Reiniciar todo el progreso?",
+        "resetMessage": "Se borrarán todos los ejercicios completados y volverás a empezar desde cero. Esta acción no se puede deshacer.",
+        "reset": "Reiniciar"
+    },
+    "validation": {
+        "semicolonRequired": "Toda sentencia SQL debe terminar con punto y coma (;).",
+        "dbNotLoaded": "Base de datos no cargada.",
+        "rowsAffected": "Filas afectadas",
+        "correct": "¡Correcto! Tu query devuelve el resultado esperado.",
+        "correctSyntax": "¡Correcto! Tu query tiene la sintaxis esperada.",
+        "incorrectSyntax": "Incorrecto. Revisa la sintaxis de tu consulta.",
+        "incorrect": "Incorrecto. ",
+        "expectedColumns": "Columnas esperadas",
+        "expected": "Esperado",
+        "obtained": "Obtenido"
+    }
+}

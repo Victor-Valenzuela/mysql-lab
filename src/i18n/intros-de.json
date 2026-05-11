@@ -1,0 +1,84 @@
+{
+    "ddl": {
+        "title": "Was ist DDL?",
+        "paragraphs": [
+            "**DDL** (Data Definition Language) ist die Teilmenge von SQL, die für die Definition der Datenbankstruktur zuständig ist: Tabellen erstellen, ändern, Einschränkungen hinzufügen und Beziehungen zwischen ihnen herstellen.",
+            "Stell dir DDL als den Bauplan deiner Datenbank vor. Bevor du einen einzigen Datensatz speicherst, musst du festlegen, wo und wie er gespeichert wird. Welche Spalten hat jede Tabelle? Welchen Datentyp akzeptiert jede? Welche sind Pflichtfelder?",
+            "In diesem Abschnitt lernst du, Tabellen mit **CREATE TABLE** zu erstellen, Primär- und Fremdschlüssel zu definieren, Einschränkungen wie **NOT NULL** und **UNIQUE** festzulegen und bestehende Tabellen mit **ALTER TABLE** zu ändern."
+        ]
+    },
+    "dml-basic": {
+        "title": "Was ist DML?",
+        "paragraphs": [
+            "**DML** (Data Manipulation Language) ist die Teilmenge von SQL, mit der du Daten in Tabellen bearbeiten kannst: neue Datensätze einfügen, bestehende aktualisieren und nicht mehr benötigte löschen.",
+            "Wenn DDL die Struktur baut, füllt DML sie mit Leben. Es ist der Unterschied zwischen einem leeren Gebäude und einem, in dem Menschen arbeiten.",
+            "In diesem Abschnitt lernst du **INSERT** (Daten hinzufügen), **UPDATE** (bestehende Daten ändern) und **DELETE** (Datensätze löschen). Die goldene Regel: Verwende immer **WHERE** bei UPDATE und DELETE, sonst betrifft es die gesamte Tabelle."
+        ]
+    },
+    "select-basics": {
+        "title": "Abfragen mit SELECT",
+        "paragraphs": [
+            "**SELECT** ist der am häufigsten verwendete Befehl in SQL. Er ermöglicht es, Informationen aus der Datenbank mit Filtern, Bedingungen und Transformationen zu extrahieren.",
+            "Mit **WHERE** kannst du Datensätze nach bestimmten Bedingungen filtern: Gleichheit, Vergleich, Textmuster (**LIKE**), Wertelisten (**IN**), Bereiche (**BETWEEN**) und Nullwerte (**IS NULL**).",
+            "In diesem Abschnitt beherrschst du die grundlegenden Abfragen, die die Basis für alles Weitere bilden: JOINs, Unterabfragen und Aggregationen."
+        ]
+    },
+    "order-limit": {
+        "title": "Sortieren und Paginieren",
+        "paragraphs": [
+            "Eine Abfrage ohne Sortierung liefert Ergebnisse in unvorhersehbarer Reihenfolge. **ORDER BY** ermöglicht dir die genaue Kontrolle über die Darstellung: alphabetisch, nach Datum, nach Betrag, aufsteigend oder absteigend.",
+            "**LIMIT** und **OFFSET** sind essentiell für die Paginierung: Ergebnisse in Seiten von 10, 20 oder 50 Datensätzen anzeigen, wie es jede moderne Webanwendung tut.",
+            "In diesem Abschnitt lernst du, Ergebnisse zu sortieren, die angezeigte Menge zu begrenzen und Daten für Benutzeroberflächen zu paginieren."
+        ]
+    },
+    "aggregation": {
+        "title": "Aggregationsfunktionen",
+        "paragraphs": [
+            "Aggregationsfunktionen fassen mehrere Zeilen zu einem einzigen Wert zusammen: Datensätze zählen (**COUNT**), Werte summieren (**SUM**), Durchschnitte berechnen (**AVG**), Maxima (**MAX**) und Minima (**MIN**) finden.",
+            "**GROUP BY** ermöglicht das Gruppieren von Zeilen mit gleichem Wert und die Anwendung von Aggregationsfunktionen auf jede Gruppe separat. **HAVING** filtert diese Gruppen nach der Aggregation.",
+            "In diesem Abschnitt lernst du, statistische Berichte zu erstellen: Summen pro Abteilung, Durchschnitte pro Kategorie, Zählungen pro Gruppe und Filter auf aggregierte Ergebnisse."
+        ]
+    },
+    "joins": {
+        "title": "Tabellen verknüpfen mit JOINs",
+        "paragraphs": [
+            "In einer relationalen Datenbank sind Informationen auf mehrere miteinander verbundene Tabellen verteilt. **JOINs** ermöglichen es, Daten aus zwei oder mehr Tabellen in einer einzigen Abfrage zu kombinieren.",
+            "**INNER JOIN** gibt nur Datensätze zurück, die in beiden Tabellen eine Übereinstimmung haben. **LEFT JOIN** schließt alle Datensätze der linken Tabelle ein, auch wenn sie keine Übereinstimmung in der rechten haben.",
+            "In diesem Abschnitt lernst du, Tabellen zu verknüpfen, Informationen aus mehreren Quellen zu kombinieren und Berichte zu erstellen, die Beziehungen zwischen Entitäten einbeziehen."
+        ]
+    },
+    "subqueries": {
+        "title": "Unterabfragen und CTEs",
+        "paragraphs": [
+            "Eine Unterabfrage ist eine Abfrage innerhalb einer anderen Abfrage. Sie ermöglicht es, das Ergebnis eines **SELECT** als Filter, Vergleichswert oder temporäre Tabelle innerhalb einer anderen Operation zu verwenden.",
+            "**CTEs** (Common Table Expressions) mit **WITH** erstellen benannte temporäre Tabellen, die du in der Hauptabfrage wiederverwenden kannst. Sie sind lesbarer als verschachtelte Unterabfragen.",
+            "In diesem Abschnitt lernst du, komplexe Probleme zu lösen, indem du sie in kleinere Abfragen zerlegst: nach Durchschnitten filtern, Existenz mit **EXISTS** prüfen und Zwischenergebnisse erstellen."
+        ]
+    },
+    "dates": {
+        "title": "Datumsfunktionen",
+        "paragraphs": [
+            "Datenbanken speichern Daten in bestimmten Formaten und bieten Funktionen zu deren Bearbeitung: Teile extrahieren (Jahr, Monat, Tag), Differenzen berechnen, nach Zeiträumen filtern.",
+            "In MySQL ermöglichen Funktionen wie **YEAR()**, **MONTH()**, **NOW()**, **DATE_SUB()** und **BETWEEN** eine flexible und präzise Arbeit mit Datumsangaben.",
+            "In diesem Abschnitt lernst du, nach Zeiträumen zu filtern, Datumskomponenten zu extrahieren und relative Bereiche zu berechnen (letzte 30 Tage, dieses Jahr usw.)."
+        ]
+    },
+    "optimization": {
+        "title": "Optimierung und Kontrolle",
+        "paragraphs": [
+            "Eine Datenbank mit Millionen von Datensätzen kann langsam werden, wenn sie nicht optimiert wird. **Indizes** beschleunigen Suchen ohne die Daten zu verändern, wie das Inhaltsverzeichnis eines Buches.",
+            "**Transaktionen** (**BEGIN**, **COMMIT**, **ROLLBACK**) garantieren, dass mehrere Operationen als atomare Einheit ausgeführt werden: Entweder werden alle abgeschlossen oder keine.",
+            "**Views** (**CREATE VIEW**) erstellen 'virtuelle Tabellen' basierend auf komplexen Abfragen und vereinfachen den Zugriff auf häufig abgefragte Daten.",
+            "In diesem Abschnitt lernst du, die Leistung mit Indizes zu optimieren, die Integrität mit Transaktionen zu schützen und Abfragen mit Views zu vereinfachen."
+        ]
+    },
+    "dcl": {
+        "title": "Zugriffskontrolle (DCL)",
+        "paragraphs": [
+            "**DCL** (Data Control Language) verwaltet, wer was in der Datenbank tun darf. In einer realen Umgebung mit mehreren Benutzern sollte nicht jeder auf alles Zugriff haben.",
+            "**CREATE USER** erstellt Zugangskonten. **GRANT** erteilt spezifische Berechtigungen (lesen, schreiben, löschen) für Tabellen oder ganze Datenbanken. **REVOKE** entzieht sie.",
+            "Ein Datenbankadministrator (DBA) verwendet DCL, um sicherzustellen, dass ein Junior-Entwickler keine Produktionstabellen löschen kann oder dass eine Anwendung nur bestimmte Daten lesen darf.",
+            "In diesem Abschnitt lernst du, Benutzer zu erstellen, Berechtigungen zu vergeben und zu entziehen und das Prinzip der minimalen Berechtigung zu verstehen."
+        ]
+    }
+}

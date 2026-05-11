@@ -1,0 +1,74 @@
+{
+    "lang": "de",
+    "site": {
+        "title": "SQL Lab — Interaktive MySQL-Übungen",
+        "subtitle": "Lerne MySQL durch echte Queries"
+    },
+    "nav": {
+        "backToStart": "Zurück zum Start",
+        "themeToggle": "Design wechseln"
+    },
+    "welcome": {
+        "whatIsSql": "Was ist SQL?",
+        "sqlDescription": "<span class=\"text-white font-medium\">SQL (Structured Query Language)</span> ist die Standardsprache zur Kommunikation mit relationalen Datenbanken. Mit SQL kannst du Tabellen erstellen, Daten einfügen, abfragen, ändern und löschen. Es ist die Sprache, die MySQL, PostgreSQL, SQLite und praktisch jede Datenbank der Welt spricht.",
+        "relationalDb": "Relationale Datenbanken",
+        "relationalDescription": "Eine relationale Datenbank organisiert Informationen in <span class=\"text-white font-medium\">Tabellen</span>, die durch <span class=\"text-white font-medium\">Beziehungen</span> (Foreign Keys) miteinander verbunden sind. Zum Beispiel: Ein Patient hat Termine, jeder Termin hat einen Arzt, jeder Arzt gehört zu einer Abteilung. Diese Verbindungen ermöglichen komplexe Abfragen ohne Datenduplizierung.",
+        "aboutExercises": "Über diese Übungen",
+        "aboutDescription1": "Du arbeitest mit einer <span class=\"text-white font-medium\">Krankenhaus</span>-Datenbank, die 10 verknüpfte Tabellen und über 9.000 Datensätze enthält: Patienten, Ärzte, Abteilungen, Termine, Diagnosen, Medikamente, Rezepte, Zimmer, Aufnahmen und Rechnungen.",
+        "aboutDescription2": "Schreibe deine Queries in <span class=\"text-white font-medium\">MySQL-Syntax</span>. Das System führt sie in Echtzeit gegen die Datenbank aus und überprüft dein Ergebnis.",
+        "exercises": "Übungen",
+        "tables": "Tabellen",
+        "records": "Datensätze",
+        "start": "Starten →",
+        "resetProgress": "↺ Fortschritt zurücksetzen"
+    },
+    "exercise": {
+        "task": "Aufgabe",
+        "run": "Ausführen",
+        "validate": "Prüfen",
+        "hint": "Hinweis",
+        "resetDb": "DB zurücksetzen",
+        "hintPlaceholder": "Klicke \"💡 Hinweis\" wenn du Hilfe brauchst",
+        "result": "Ergebnis",
+        "loading": "Datenbank wird geladen...",
+        "loadError": "Fehler beim Laden:",
+        "correct": "Richtig! Deine Query liefert das erwartete Ergebnis.",
+        "incorrect": "Falsch. Überprüfe deine Abfrage.",
+        "rows": "Zeilen",
+        "moreRows": "weitere Zeilen"
+    },
+    "intro": {
+        "exercisesInSection": "Übungen in diesem Abschnitt",
+        "startExercises": "Übungen starten →"
+    },
+    "complete": {
+        "title": "Herzlichen Glückwunsch!",
+        "subtitle": "Du hast SQL<span class=\"text-white\">_Lab</span> abgeschlossen",
+        "message": "Du beherrschst nun die Grundlagen von MySQL: vom Erstellen von Tabellen bis zur Verwaltung von Berechtigungen, über komplexe Abfragen, JOINs, Unterabfragen und Optimierung. Du hast jetzt die Werkzeuge, um mit echten Datenbanken zu arbeiten.",
+        "completed": "Abgeschlossen",
+        "sections": "Abschnitte",
+        "backToStart": "Zurück zum Start",
+        "resetAndRepeat": "Fortschritt zurücksetzen und wiederholen"
+    },
+    "modal": {
+        "skipTitle": "Zu einer anderen Übung springen?",
+        "skipMessage": "Du hast die aktuelle Übung noch nicht gelöst. Möchtest du trotzdem fortfahren?",
+        "cancel": "Abbrechen",
+        "continue": "Fortfahren",
+        "resetTitle": "Gesamten Fortschritt zurücksetzen?",
+        "resetMessage": "Alle abgeschlossenen Übungen werden gelöscht und du beginnst von vorne. Diese Aktion kann nicht rückgängig gemacht werden.",
+        "reset": "Zurücksetzen"
+    },
+    "validation": {
+        "semicolonRequired": "Jede SQL-Anweisung muss mit einem Semikolon (;) enden.",
+        "dbNotLoaded": "Datenbank nicht geladen.",
+        "rowsAffected": "Betroffene Zeilen",
+        "correct": "Richtig! Deine Query liefert das erwartete Ergebnis.",
+        "correctSyntax": "Richtig! Deine Query hat die erwartete Syntax.",
+        "incorrectSyntax": "Falsch. Überprüfe die Syntax deiner Abfrage.",
+        "incorrect": "Falsch. ",
+        "expectedColumns": "Erwartete Spalten",
+        "expected": "Erwartet",
+        "obtained": "Erhalten"
+    }
+}

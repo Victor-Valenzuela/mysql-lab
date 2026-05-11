@@ -1,6 +1,8 @@
 // @ts-ignore
 import initSqlJs from 'sql.js';
 import { mysqlToSqlite } from './mysql-to-sqlite';
+// @ts-ignore
+import t from '../i18n/index.ts';
 
 let db: any = null;
 let SQL: any = null;
@@ -46,11 +48,11 @@ export async function initDatabase(base: string = '/'): Promise<void> {
  */
 export function executeQuery(mysqlQuery: string): QueryResult {
     if (!db) {
-        return { columns: [], rows: [], rowCount: 0, error: 'Base de datos no cargada.' };
+        return { columns: [], rows: [], rowCount: 0, error: t.validation.dbNotLoaded };
     }
 
     if (!mysqlQuery.trimEnd().endsWith(';')) {
-        return { columns: [], rows: [], rowCount: 0, error: 'Toda sentencia SQL debe terminar con punto y coma (;).' };
+        return { columns: [], rows: [], rowCount: 0, error: t.validation.semicolonRequired };
     }
 
     try {
@@ -60,7 +62,7 @@ export function executeQuery(mysqlQuery: string): QueryResult {
         if (results.length === 0) {
             const changes = db.getRowsModified();
             return {
-                columns: ['Filas afectadas'],
+                columns: [t.validation.rowsAffected],
                 rows: [[changes]],
                 rowCount: changes
             };
@@ -110,7 +112,7 @@ function normalizeQuery(query: string): string {
  */
 function executeOnFreshDb(mysqlQuery: string): QueryResult {
     if (!SQL || !dbBuffer) {
-        return { columns: [], rows: [], rowCount: 0, error: 'Base de datos no cargada.' };
+        return { columns: [], rows: [], rowCount: 0, error: t.validation.dbNotLoaded };
     }
 
     const freshDb = new SQL.Database(new Uint8Array(dbBuffer));
@@ -121,7 +123,7 @@ function executeOnFreshDb(mysqlQuery: string): QueryResult {
         if (results.length === 0) {
             const changes = freshDb.getRowsModified();
             return {
-                columns: ['Filas afectadas'],
+                columns: [t.validation.rowsAffected],
                 rows: [[changes]],
                 rowCount: changes
             };
@@ -155,12 +157,12 @@ function executeOnFreshDb(mysqlQuery: string): QueryResult {
 export function validateQuery(userQuery: string, expectedQuery: string): ValidationResult {
     // Require semicolon
     if (!userQuery.trimEnd().endsWith(';')) {
-        const errorResult: QueryResult = { columns: [], rows: [], rowCount: 0, error: 'Toda sentencia SQL debe terminar con punto y coma (;).' };
+        const errorResult: QueryResult = { columns: [], rows: [], rowCount: 0, error: t.validation.semicolonRequired };
         return {
             correct: false,
             userResult: errorResult,
             expectedResult: errorResult,
-            message: 'Toda sentencia SQL debe terminar con punto y coma (;).'
+            message: t.validation.semicolonRequired
         };
     }
 
@@ -191,16 +193,16 @@ export function validateQuery(userQuery: string, expectedQuery: string): Validat
                 correct: true,
                 userResult,
                 expectedResult,
-                message: '¡Correcto! Tu query devuelve el resultado esperado.'
+                message: t.validation.correct
             };
         }
 
-        let message = 'Incorrecto. ';
+        let message = t.validation.incorrect;
         if (!colsMatch) {
-            message += `Columnas esperadas: ${expectedResult.columns.join(', ')}. `;
+            message += `${t.validation.expectedColumns}: ${expectedResult.columns.join(', ')}. `;
         }
         if (!rowsMatch) {
-            message += `Esperado: ${expectedResult.rowCount} filas. Obtenido: ${userResult.rowCount} filas.`;
+            message += `${t.validation.expected}: ${expectedResult.rowCount} ${t.exercise.rows}. ${t.validation.obtained}: ${userResult.rowCount} ${t.exercise.rows}.`;
         }
 
         return { correct: false, userResult, expectedResult, message };
@@ -219,8 +221,8 @@ export function validateQuery(userQuery: string, expectedQuery: string): Validat
         userResult: correct ? okResult : failResult,
         expectedResult: okResult,
         message: correct
-            ? '¡Correcto! Tu query tiene la sintaxis esperada.'
-            : 'Incorrecto. Revisa la sintaxis de tu consulta.'
+            ? t.validation.correctSyntax
+            : t.validation.incorrectSyntax
     };
 }
 
