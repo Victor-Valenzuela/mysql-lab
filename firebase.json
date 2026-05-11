@@ -1,7 +1,13 @@
 {
-  "hosting": {
-    "site": "sql-lab-es",
-    "public": "dist",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-  }
+    "hosting": [{
+            "site": "sql-lab-es",
+            "public": "dist",
+            "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+        },
+        {
+            "site": "sql-lab-de",
+            "public": "dist",
+            "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+        }
+    ]
 }
