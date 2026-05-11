@@ -88,6 +88,11 @@ body {
 
 /* ========== LIGHT MODE ========== */
 
+/* Dark mode - card contrast */
+:root:not(.light) .bg-slate-900\/50 {
+    background-color: rgba(30, 41, 59, 0.5) !important;
+}
+
 /* Backgrounds - warm gray base */
 :root.light .bg-\[\#0f172a\] {
     background-color: #ede8e6 !important;
