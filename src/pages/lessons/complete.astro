@@ -1,5 +1,6 @@
 ---
 import "../../styles/global.css";
+import Header from "../../components/Header.astro";
 import t from "../../i18n/index.ts";
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
@@ -17,19 +18,20 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
   </head>
 
   <body class="bg-[#0f172a] text-slate-300 font-sans min-h-screen">
-    <div class="min-h-screen flex items-center justify-center p-6">
+    <Header base={base} showMenu={false} hideProgress={true} />
+    <div class="min-h-screen flex items-center justify-center p-6 pt-20">
       <div class="max-w-lg w-full text-center">
-        <div class="inline-flex items-center justify-center w-24 h-24 bg-emerald-500/20 rounded-full mb-8">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-emerald-500/20 rounded-full mb-4">
           <svg class="w-12 h-12 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3h14l-1.5 6H6.5L5 3zM12 9v6m0 0l-3 3m3-3l3 3M8 21h8" />
           </svg>
         </div>
 
-        <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">{t.complete.title}</h1>
-        <p class="text-lg text-slate-400 font-semibold mb-6" set:html={t.complete.subtitle}></p>
-        <p class="text-sm text-slate-400 leading-relaxed mb-8">{t.complete.message}</p>
+        <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-1">{t.complete.title}</h1>
+        <p class="text-lg text-slate-400 font-semibold mb-4" set:html={t.complete.subtitle}></p>
+        <p class="text-sm text-slate-400 leading-relaxed mb-2 !text-justify">{t.complete.message}</p>
 
-        <div class="grid grid-cols-3 gap-4 mb-10 p-6 bg-slate-900/50 rounded-2xl border border-white/5">
+        <div class="grid grid-cols-3 gap-4 mb-5 p-6 bg-slate-900/50 rounded-2xl border border-white/5">
           <div>
             <p id="completed-count" class="text-2xl font-black text-white">0</p>
             <p class="text-[10px] text-slate-500 uppercase tracking-widest">{t.complete.completed}</p>
@@ -75,8 +77,20 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
       const savedTheme = localStorage.getItem('sql-lab-theme') || 'dark';
       if (savedTheme === 'light') document.documentElement.classList.add('light');
 
+      document.getElementById('btn-theme')!.onclick = () => {
+        const isLight = document.documentElement.classList.toggle('light');
+        localStorage.setItem('sql-lab-theme', isLight ? 'light' : 'dark');
+      };
+
       const completed = JSON.parse(localStorage.getItem('sql-lab-completed') || '[]');
       document.getElementById('completed-count')!.textContent = String(completed.length);
+
+      const total = 87;
+      const pct = (completed.length / total) * 100;
+      const progressBar = document.getElementById('progress-bar');
+      const progressText = document.getElementById('progress-text');
+      if (progressBar) progressBar.style.width = `${pct}%`;
+      if (progressText) progressText.textContent = `${completed.length} / ${total}`;
 
       document.getElementById('btn-reset')!.onclick = () => {
         document.getElementById('reset-modal')!.classList.remove('hidden');

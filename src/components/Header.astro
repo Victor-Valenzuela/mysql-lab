@@ -2,7 +2,7 @@
 import exercisesData from "../data/exercises.json";
 import t from "../i18n/index.ts";
 
-const { showMenu = false, base = '/' } = Astro.props;
+const { showMenu = false, base = '/', hideProgress = false } = Astro.props;
 const totalExercises = exercisesData.categories.flatMap(c => c.exercises).length;
 ---
 
@@ -28,12 +28,14 @@ const totalExercises = exercisesData.categories.flatMap(c => c.exercises).length
       <span class="lg:hidden text-sm font-bold text-white">SQL<span class="text-emerald-400">_Lab</span></span>
     </div>
     <!-- Center: progress -->
+    {!hideProgress && (
     <div class="flex items-center gap-2 lg:gap-3">
       <span id="progress-text" class="text-[10px] sm:text-xs text-slate-500 font-mono">0 / {totalExercises}</span>
       <div class="w-12 sm:w-24 lg:w-32 h-1.5 bg-slate-800 rounded-full overflow-hidden">
         <div id="progress-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
       </div>
     </div>
+    )}
     <!-- Right: theme toggle -->
     <div class="flex items-center gap-2">
       <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

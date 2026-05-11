@@ -51,7 +51,7 @@ const firstExercise = currentCategory.exercises[0];
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
             <div class="space-y-4">
               {intro.paragraphs.map((p: string) => (
-                <p class="text-sm lg:text-base text-slate-400 leading-relaxed" set:html={p
+                <p class="text-sm lg:text-base text-slate-400 leading-relaxed text-justify" set:html={p
                   .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
                   .replace(/`([^`]+)`/g, '<code class="bg-white/10 px-1.5 py-0.5 rounded text-cyan-300 text-[11px] font-mono">$1</code>')
                 }></p>

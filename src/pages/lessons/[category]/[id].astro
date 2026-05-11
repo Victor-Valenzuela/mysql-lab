@@ -171,7 +171,7 @@ const isSelectExercise = /^\s*(SELECT|WITH)\b/i.test(exercise.expected);
 
           {exercise.theory && (
             <div class="mb-4 p-4 bg-slate-900/50 rounded-xl border border-white/5">
-              <div class="text-xs lg:text-sm text-slate-300 leading-relaxed whitespace-pre-wrap theory-block" set:html={exercise.theory
+              <div class="text-xs lg:text-sm text-slate-300 leading-relaxed whitespace-pre-wrap theory-block text-justify" set:html={exercise.theory
                 .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
                 .replace(/`([^`]+)`/g, '<code class="bg-white/10 px-1.5 py-0.5 rounded text-cyan-300 text-[11px] font-mono">$1</code>')
               }></div>
@@ -179,7 +179,7 @@ const isSelectExercise = /^\s*(SELECT|WITH)\b/i.test(exercise.expected);
             <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t.exercise.task}</span>
           )}
 
-          <p class="text-sm text-slate-400 leading-relaxed whitespace-pre-line">{exercise.description}</p>
+          <p class="text-sm text-slate-400 leading-relaxed whitespace-pre-line text-justify">{exercise.description}</p>
         </div>
 
         <!-- Schema Reference (only for SELECT exercises) -->
